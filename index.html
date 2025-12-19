@@ -613,8 +613,7 @@
                         </span>
                         <p class="challenge-text">{{ currentChallengeData?.text }}</p>
                         <div class="drink-option">
-                            🍺 O bebe {{ currentChallengeData?.drinks }} trago{{ currentChallengeData?.drinks > 1 ? 's'
-                            : '' }}
+                            🍺 {{ getDrinkText(currentChallengeData) }}
                         </div>
                     </div>
 
@@ -646,114 +645,114 @@
         // Cada desafío tiene: category, text, drinks (proporcional)
         // ============================================================
         const challenges = [
-            // ============ YO NUNCA - Anécdotas de fiesta ============
-            { category: "Yo Nunca", text: "Yo nunca... me he meado en la calle estando borracho/a 🚶", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... me he despertado sin saber cómo llegué a casa 🏠", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... he vomitado en un sitio público (bar, disco, taxi...) 🤮", drinks: 3 },
-            { category: "Yo Nunca", text: "Yo nunca... me he quedado dormido/a en un sitio random de fiesta 😴", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... he perdido el móvil, cartera o llaves de fiesta 📱", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... he hecho algo de lo que me arrepentí al día siguiente 😬", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... me han echado de un bar o discoteca 🚪", drinks: 3 },
-            { category: "Yo Nunca", text: "Yo nunca... he mezclado bebidas hasta morir (cubata + chupitos + vino...) 🍹", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... he llorado borracho/a por tonterías 😭", drinks: 1 },
-            { category: "Yo Nunca", text: "Yo nunca... he roto algo en una fiesta (vasos, muebles, puertas...) 💥", drinks: 3 },
-            { category: "Yo Nunca", text: "Yo nunca... me he liado con alguien que no debía 💋", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... he hecho un calvo/mooning en público 🍑", drinks: 4 },
-            { category: "Yo Nunca", text: "Yo nunca... he llamado a alguien borracho/a y dicho algo vergonzoso 📞", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... he subido algo a redes borracho/a que tuve que borrar 📱", drinks: 2 },
-            { category: "Yo Nunca", text: "Yo nunca... me he bañado en una fuente o piscina de madrugada 🏊", drinks: 3 },
+            // ============ YO NUNCA - Si lo has hecho, bebes ============
+            { category: "Yo Nunca", text: "Yo nunca... me he meado en la calle estando borracho/a 🚶", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... me he despertado sin saber cómo llegué a casa 🏠", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he vomitado en un sitio público (bar, disco, taxi...) 🤮", drinks: 3, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... me he quedado dormido/a en un sitio random de fiesta 😴", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he perdido el móvil, cartera o llaves de fiesta 📱", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he hecho algo de lo que me arrepentí al día siguiente 😬", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... me han echado de un bar o discoteca 🚪", drinks: 3, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he mezclado bebidas hasta morir (cubata + chupitos + vino...) 🍹", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he llorado borracho/a por tonterías 😭", drinks: 1, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he roto algo en una fiesta (vasos, muebles, puertas...) 💥", drinks: 3, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... me he liado con alguien que no debía 💋", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he hecho un calvo/mooning en público 🍑", drinks: 4, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he llamado a alguien borracho/a y dicho algo vergonzoso 📞", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... he subido algo a redes borracho/a que tuve que borrar 📱", drinks: 2, drinkType: "guilty" },
+            { category: "Yo Nunca", text: "Yo nunca... me he bañado en una fuente o piscina de madrugada 🏊", drinks: 3, drinkType: "guilty" },
 
-            // ============ CUENTA - Anécdotas épicas ============
-            { category: "Cuenta", text: "Cuenta tu PEOR resaca de la historia. Con detalles 🤕", drinks: 3 },
-            { category: "Cuenta", text: "Cuenta algo vergonzoso que hayas hecho en una fiesta 😳", drinks: 3 },
-            { category: "Cuenta", text: "Cuenta una pelea o discusión que hayas tenido de fiesta 👊", drinks: 4 },
-            { category: "Cuenta", text: "Cuenta tu momento más ÉPICO de una noche de fiesta 🏆", drinks: 2 },
-            { category: "Cuenta", text: "Cuenta la anécdota más loca que tengas con alguien de aquí 🎭", drinks: 3 },
-            { category: "Cuenta", text: "Cuenta algo ilegal que hayas hecho (sin dar muchos detalles) 🚨", drinks: 5 },
-            { category: "Cuenta", text: "Cuenta tu ligoteo más patético 💔", drinks: 2 },
-            { category: "Cuenta", text: "Cuenta la mayor mentira que hayas dicho para escaparte de algo 🤥", drinks: 3 },
-            { category: "Cuenta", text: "Cuenta algo que hiciste borracho/a que NO recuerdas pero te contaron 🧠", drinks: 3 },
-            { category: "Cuenta", text: "Cuenta tu momento más ridículo intentando ligar 🙃", drinks: 2 },
+            // ============ CUENTA - Cuenta o bebe ============
+            { category: "Cuenta", text: "Cuenta tu PEOR resaca de la historia. Con detalles 🤕", drinks: 3, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta algo vergonzoso que hayas hecho en una fiesta 😳", drinks: 3, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta una pelea o discusión que hayas tenido de fiesta 👊", drinks: 4, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta tu momento más ÉPICO de una noche de fiesta 🏆", drinks: 2, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta la anécdota más loca que tengas con alguien de aquí 🎭", drinks: 3, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta algo ilegal que hayas hecho (sin dar muchos detalles) 🚨", drinks: 5, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta tu ligoteo más patético 💔", drinks: 2, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta la mayor mentira que hayas dicho para escaparte de algo 🤥", drinks: 3, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta algo que hiciste borracho/a que NO recuerdas pero te contaron 🧠", drinks: 3, drinkType: "alternative" },
+            { category: "Cuenta", text: "Cuenta tu momento más ridículo intentando ligar 🙃", drinks: 2, drinkType: "alternative" },
 
-            // ============ RETO - Burradas para hacer ahora ============
-            { category: "Reto", text: "Imita a otro jugador hasta que adivinen quién es 🎭", drinks: 2 },
-            { category: "Reto", text: "Llama a tu último contacto y dile 'Te echo de menos' 📞", drinks: 4 },
-            { category: "Reto", text: "Haz 10 flexiones ahora mismo 💪", drinks: 3 },
-            { category: "Reto", text: "Grita algo random por la ventana/balcón 📢", drinks: 4 },
-            { category: "Reto", text: "Deja que el grupo escriba un mensaje desde tu móvil 📱", drinks: 5 },
-            { category: "Reto", text: "Cuenta un chiste. Si nadie se ríe, bebe el doble 😂", drinks: 2 },
-            { category: "Reto", text: "Imita a un famoso durante 30 segundos 🌟", drinks: 2 },
-            { category: "Reto", text: "Baila sin música durante 20 segundos 💃", drinks: 2 },
-            { category: "Reto", text: "Di algo bonito a cada jugador. Tiene que ser sincero 💖", drinks: 3 },
-            { category: "Reto", text: "Mantén una conversación solo con palabras en inglés durante 1 minuto 🇬🇧", drinks: 2 },
-            { category: "Reto", text: "Deja que alguien te haga una foto fea y súbela a tu estado 📸", drinks: 4 },
-            { category: "Reto", text: "Habla con acento de otra región/país hasta tu siguiente turno 🗣️", drinks: 2 },
-            { category: "Reto", text: "Come algo raro que elija el grupo (salsa picante, limón a bocados...) 🌶️", drinks: 4 },
-            { category: "Reto", text: "Haz tu mejor imitación de un animal. El grupo vota si vale 🐔", drinks: 2 },
-            { category: "Reto", text: "Deja que el grupo cambie tu foto de perfil de WhatsApp por 24h 📱", drinks: 5 },
+            // ============ RETO - Hazlo o bebe ============
+            { category: "Reto", text: "Imita a otro jugador hasta que adivinen quién es 🎭", drinks: 2, drinkType: "alternative" },
+            { category: "Reto", text: "Llama a tu último contacto y dile 'Te echo de menos' 📞", drinks: 4, drinkType: "alternative" },
+            { category: "Reto", text: "Haz 10 flexiones ahora mismo 💪", drinks: 3, drinkType: "alternative" },
+            { category: "Reto", text: "Grita algo random por la ventana/balcón 📢", drinks: 4, drinkType: "alternative" },
+            { category: "Reto", text: "Deja que el grupo escriba un mensaje desde tu móvil 📱", drinks: 5, drinkType: "alternative" },
+            { category: "Reto", text: "Cuenta un chiste. Si nadie se ríe, bebe el doble 😂", drinks: 2, drinkType: "alternative" },
+            { category: "Reto", text: "Imita a un famoso durante 30 segundos 🌟", drinks: 2, drinkType: "alternative" },
+            { category: "Reto", text: "Baila sin música durante 20 segundos 💃", drinks: 2, drinkType: "alternative" },
+            { category: "Reto", text: "Di algo bonito a cada jugador. Tiene que ser sincero 💖", drinks: 3, drinkType: "alternative" },
+            { category: "Reto", text: "Mantén una conversación solo con palabras en inglés durante 1 minuto 🇬🇧", drinks: 2, drinkType: "alternative" },
+            { category: "Reto", text: "Deja que alguien te haga una foto fea y súbela a tu estado 📸", drinks: 4, drinkType: "alternative" },
+            { category: "Reto", text: "Habla con acento de otra región/país hasta tu siguiente turno 🗣️", drinks: 2, drinkType: "alternative" },
+            { category: "Reto", text: "Come algo raro que elija el grupo (salsa picante, limón a bocados...) 🌶️", drinks: 4, drinkType: "alternative" },
+            { category: "Reto", text: "Haz tu mejor imitación de un animal. El grupo vota si vale 🐔", drinks: 2, drinkType: "alternative" },
+            { category: "Reto", text: "Deja que el grupo cambie tu foto de perfil de WhatsApp por 24h 📱", drinks: 5, drinkType: "alternative" },
 
-            // ============ VOTACIÓN - El grupo decide ============
-            { category: "Votación", text: "El grupo vota: ¿quién es el/la que más lía de aquí? Esa persona bebe 🔥", drinks: 3 },
-            { category: "Votación", text: "El grupo vota: ¿quién sería el peor conductor borracho? Bebe 🚗", drinks: 3 },
-            { category: "Votación", text: "El grupo vota: ¿quién se pondría más pesado en una isla desierta? 🏝️", drinks: 3 },
-            { category: "Votación", text: "El grupo vota: ¿quién tiene las peores resacas? Bebe preventivo 🤕", drinks: 2 },
-            { category: "Votación", text: "El grupo vota: ¿quién es más probable que acabe en la cárcel? Bebe 🚔", drinks: 4 },
-            { category: "Votación", text: "El grupo vota: ¿quién miente más? Esa persona defiende su honor o bebe 🤥", drinks: 3 },
-            { category: "Votación", text: "El grupo vota: ¿quién es el/la más dramático/a? 👑", drinks: 2 },
-            { category: "Votación", text: "El grupo vota: ¿quién tiene el peor gusto en música? 🎵", drinks: 2 },
-            { category: "Votación", text: "El grupo vota: ¿a quién le confiarías menos un secreto? 🤫", drinks: 3 },
-            { category: "Votación", text: "El grupo vota: ¿quién ligaría peor si estuviera solo/a? 💔", drinks: 2 },
+            // ============ VOTACIÓN - El votado bebe ============
+            { category: "Votación", text: "El grupo vota: ¿quién es el/la que más lía de aquí? 🔥", drinks: 3, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién sería el peor conductor borracho? 🚗", drinks: 3, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién se pondría más pesado en una isla desierta? 🏝️", drinks: 3, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién tiene las peores resacas? 🤕", drinks: 2, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién es más probable que acabe en la cárcel? 🚔", drinks: 4, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién miente más? 🤥", drinks: 3, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién es el/la más dramático/a? 👑", drinks: 2, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién tiene el peor gusto en música? 🎵", drinks: 2, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿a quién le confiarías menos un secreto? 🤫", drinks: 3, drinkType: "voted" },
+            { category: "Votación", text: "El grupo vota: ¿quién ligaría peor si estuviera solo/a? 💔", drinks: 2, drinkType: "voted" },
 
-            // ============ TODOS BEBEN - Momentos épicos ============
-            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN VOMITADO EN EL ÚLTIMO AÑO! 🤮", drinks: 2 },
-            { category: "Todos Beben", text: "¡TODOS LOS QUE TENGAN RESACA AHORA MISMO! 🤕", drinks: 2 },
-            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN LLEGADO TARDE HOY! ⏰", drinks: 2 },
-            { category: "Todos Beben", text: "¡TODOS LOS QUE LLEVEN ALGO NEGRO! 🖤", drinks: 1 },
-            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN DICHO UNA MENTIRA HOY! 🤥", drinks: 2 },
-            { category: "Todos Beben", text: "¡EL ÚLTIMO QUE MIRÓ EL MÓVIL! 📱", drinks: 2 },
-            { category: "Todos Beben", text: "¡TODOS LOS QUE NO HAYAN DORMIDO MÁS DE 6 HORAS! 😴", drinks: 2 },
-            { category: "Todos Beben", text: "¡BRINDIS! TODOS BEBEN POR EL QUE ELIGIÓ ESTE JUEGO! 🍻", drinks: 1 },
-            { category: "Todos Beben", text: "¡CASCADA! Todos beben en orden, solo paras cuando pare el de tu izquierda 🌊", drinks: 3 },
-            { category: "Todos Beben", text: "¡RONDA GENERAL! Todo el mundo bebe sin excusas 🍺", drinks: 2 },
+            // ============ TODOS BEBEN - Los que apliquen beben ============
+            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN VOMITADO EN EL ÚLTIMO AÑO! 🤮", drinks: 2, drinkType: "applicable" },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE TENGAN RESACA AHORA MISMO! 🤕", drinks: 2, drinkType: "applicable" },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN LLEGADO TARDE HOY! ⏰", drinks: 2, drinkType: "applicable" },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE LLEVEN ALGO NEGRO! 🖤", drinks: 1, drinkType: "applicable" },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN DICHO UNA MENTIRA HOY! 🤥", drinks: 2, drinkType: "applicable" },
+            { category: "Todos Beben", text: "¡EL ÚLTIMO QUE MIRÓ EL MÓVIL! 📱", drinks: 2, drinkType: "loser" },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE NO HAYAN DORMIDO MÁS DE 6 HORAS! 😴", drinks: 2, drinkType: "applicable" },
+            { category: "Todos Beben", text: "¡BRINDIS! ¡TODOS BEBEN! 🍻", drinks: 1, drinkType: "everyone" },
+            { category: "Todos Beben", text: "¡CASCADA! Todos beben en orden, solo paras cuando pare el de tu izquierda 🌊", drinks: 3, drinkType: "everyone" },
+            { category: "Todos Beben", text: "¡RONDA GENERAL! Todo el mundo bebe sin excusas 🍺", drinks: 2, drinkType: "everyone" },
 
-            // ============ ELIGE - Tienes el poder ============
-            { category: "Elige", text: "Elige a alguien para que cuente su peor anécdota de borrachera 🍺", drinks: 3 },
-            { category: "Elige", text: "Elige a alguien para hacerle 3 preguntas incómodas 🔍", drinks: 4 },
-            { category: "Elige", text: "Elige a 2 personas para un duelo de miradas. El que se ría primero bebe 👁️", drinks: 3 },
-            { category: "Elige", text: "Elige a alguien para que te imite. Si no aciertas quién es, bebes tú 🎭", drinks: 2 },
-            { category: "Elige", text: "Reparte 5 tragos entre los jugadores como quieras 🎯", drinks: 5 },
-            { category: "Elige", text: "Elige a alguien para piedra-papel-tijera. El perdedor bebe 3 ✂️", drinks: 3 },
-            { category: "Elige", text: "Elige a alguien para intercambiar bebidas por el resto de la partida 🔄", drinks: 2 },
-            { category: "Elige", text: "Elige quién tiene que contar la anécdota más vergonzosa de su vida 😳", drinks: 4 },
-            { category: "Elige", text: "Elige a alguien para que haga una llamada en altavoz 📞", drinks: 5 },
-            { category: "Elige", text: "Elige quién tiene que imitar a otro jugador hasta que adivinen quién es 🎭", drinks: 2 },
+            // ============ ELIGE - El elegido bebe/hace algo ============
+            { category: "Elige", text: "Elige a alguien para que cuente su peor anécdota de borrachera. Si no la cuenta... 🍺", drinks: 3, drinkType: "chosen" },
+            { category: "Elige", text: "Elige a alguien para hacerle 3 preguntas incómodas. Por cada pregunta que no responda... 🔍", drinks: 2, drinkType: "chosen" },
+            { category: "Elige", text: "Elige a 2 personas para un duelo de miradas. El primero que se ría... 👁️", drinks: 3, drinkType: "loser" },
+            { category: "Elige", text: "Elige a alguien para que te imite. Si no aciertas quién es, bebes tú 🎭", drinks: 2, drinkType: "loser" },
+            { category: "Elige", text: "Reparte estos tragos entre los jugadores como quieras 🎯", drinks: 5, drinkType: "distribute" },
+            { category: "Elige", text: "Elige a alguien para piedra-papel-tijera. El perdedor... ✂️", drinks: 3, drinkType: "loser" },
+            { category: "Elige", text: "Elige a alguien: esa persona tiene que hacer una llamada en altavoz. Si no lo hace... �", drinks: 5, drinkType: "chosen" },
+            { category: "Elige", text: "Elige quién tiene que contar la anécdota más vergonzosa de su vida. Si no la cuenta... 😳", drinks: 4, drinkType: "chosen" },
+            { category: "Elige", text: "Elige a alguien para intercambiar bebidas contigo el resto de la partida �", drinks: 0, drinkType: "none" },
+            { category: "Elige", text: "Elige quién tiene que imitar a otro jugador hasta que adivinen quién es. Si falla... 🎭", drinks: 2, drinkType: "chosen" },
 
-            // ============ DUELO - Cara a cara ============
-            { category: "Duelo", text: "DUELO: Piedra, papel, tijera al mejor de 3. El perdedor bebe ✂️", drinks: 3 },
-            { category: "Duelo", text: "DUELO: ¿Quién aguanta más sin reírse? Miraos fijamente 30 segundos 👁️", drinks: 3 },
-            { category: "Duelo", text: "DUELO: Competid a ver quién dice más capitales de Europa en 30 seg 🌍", drinks: 3 },
-            { category: "Duelo", text: "DUELO: A ver quién hace mejor imitación de un borracho 🥴", drinks: 2 },
-            { category: "Duelo", text: "DUELO: Pulso de pulgares. El perdedor bebe 💪", drinks: 2 },
-            { category: "Duelo", text: "DUELO: ¿Quién cuenta el chiste más malo? El grupo vota, el perdedor bebe 😂", drinks: 2 },
+            // ============ DUELO - El perdedor bebe ============
+            { category: "Duelo", text: "DUELO: Piedra, papel, tijera al mejor de 3. El perdedor... ✂️", drinks: 3, drinkType: "loser" },
+            { category: "Duelo", text: "DUELO: ¿Quién aguanta más sin reírse? Miraos fijamente 30 segundos. El que se ría... 👁️", drinks: 3, drinkType: "loser" },
+            { category: "Duelo", text: "DUELO: Competid a ver quién dice más capitales de Europa en 30 seg. El perdedor... 🌍", drinks: 3, drinkType: "loser" },
+            { category: "Duelo", text: "DUELO: A ver quién hace mejor imitación de un borracho. El grupo vota, el perdedor... 🥴", drinks: 2, drinkType: "loser" },
+            { category: "Duelo", text: "DUELO: Pulso de pulgares. El perdedor... 💪", drinks: 2, drinkType: "loser" },
+            { category: "Duelo", text: "DUELO: ¿Quién cuenta el chiste más malo? El grupo vota, el perdedor... 😂", drinks: 2, drinkType: "loser" },
 
-            // ============ NUEVA REGLA - Hasta el siguiente turno ============
-            { category: "Nueva Regla", text: "REGLA: Nadie puede decir 'yo' hasta el siguiente turno. El que lo diga bebe 🙊", drinks: 1 },
-            { category: "Nueva Regla", text: "REGLA: Hay que brindar antes de cada trago o bebes el doble 🥂", drinks: 1 },
-            { category: "Nueva Regla", text: "REGLA: Solo se puede beber con la mano izquierda 🖐️", drinks: 1 },
-            { category: "Nueva Regla", text: "REGLA: Hay que hablar en tercera persona. El que falle, bebe 👤", drinks: 1 },
-            { category: "Nueva Regla", text: "REGLA: Todos tienen que añadir 'tío' al final de cada frase, tío 🗣️", drinks: 1 },
-            { category: "Nueva Regla", text: "REGLA: Prohibido señalar con el dedo. El que lo haga, bebe 👆", drinks: 1 },
-            { category: "Nueva Regla", text: "REGLA: Antes de beber hay que decir algo que te mole del de tu derecha 💖", drinks: 1 },
+            // ============ NUEVA REGLA - El que falle bebe ============
+            { category: "Nueva Regla", text: "REGLA: Nadie puede decir 'yo' hasta el siguiente turno. El que lo diga... 🙊", drinks: 1, drinkType: "fail" },
+            { category: "Nueva Regla", text: "REGLA: Hay que brindar antes de cada trago. El que no lo haga bebe el doble 🥂", drinks: 2, drinkType: "fail" },
+            { category: "Nueva Regla", text: "REGLA: Solo se puede beber con la mano izquierda. El que falle... 🖐️", drinks: 1, drinkType: "fail" },
+            { category: "Nueva Regla", text: "REGLA: Hay que hablar en tercera persona. El que falle... 👤", drinks: 1, drinkType: "fail" },
+            { category: "Nueva Regla", text: "REGLA: Todos tienen que añadir 'tío' al final de cada frase, tío. El que falle... 🗣️", drinks: 1, drinkType: "fail" },
+            { category: "Nueva Regla", text: "REGLA: Prohibido señalar con el dedo. El que lo haga... 👆", drinks: 1, drinkType: "fail" },
+            { category: "Nueva Regla", text: "REGLA: Antes de beber hay que decir algo que te mole del de tu derecha 💖", drinks: 1, drinkType: "fail" },
 
-            // ============ BOMBA - Lo más heavy ============
-            { category: "Bomba", text: "💣 BOMBA: Rankea a todos del más al menos gracioso. EN VOZ ALTA", drinks: 5 },
-            { category: "Bomba", text: "💣 BOMBA: Confiesa algo que nunca le dirías a nadie del grupo... Y DILO", drinks: 5 },
-            { category: "Bomba", text: "💣 BOMBA: Di qué es lo que más te molesta de cada persona aquí 😬", drinks: 6 },
-            { category: "Bomba", text: "💣 BOMBA: Cuenta tu mayor cagada de la vida. Algo GORDO", drinks: 5 },
-            { category: "Bomba", text: "💣 BOMBA: Di una verdad sobre ti que nadie aquí sepa", drinks: 4 },
-            { category: "Bomba", text: "💣 BOMBA: Imita a alguien del grupo exagerando sus defectos 🎭", drinks: 4 },
-            { category: "Bomba", text: "💣 BOMBA: Cuenta la peor pelea o discusión que hayas tenido 👊", drinks: 5 },
-            { category: "Bomba", text: "💣 BOMBA: Di qué cambiarías de cada persona del grupo 🔧", drinks: 5 }
+            // ============ BOMBA - Hazlo o bebe un montón ============
+            { category: "Bomba", text: "💣 BOMBA: Rankea a todos del más al menos gracioso. EN VOZ ALTA", drinks: 5, drinkType: "alternative" },
+            { category: "Bomba", text: "💣 BOMBA: Confiesa algo que nunca le dirías a nadie del grupo... Y DILO", drinks: 5, drinkType: "alternative" },
+            { category: "Bomba", text: "💣 BOMBA: Di qué es lo que más te molesta de cada persona aquí 😬", drinks: 6, drinkType: "alternative" },
+            { category: "Bomba", text: "💣 BOMBA: Cuenta tu mayor cagada de la vida. Algo GORDO", drinks: 5, drinkType: "alternative" },
+            { category: "Bomba", text: "💣 BOMBA: Di una verdad sobre ti que nadie aquí sepa", drinks: 4, drinkType: "alternative" },
+            { category: "Bomba", text: "💣 BOMBA: Imita a alguien del grupo exagerando sus defectos 🎭", drinks: 4, drinkType: "alternative" },
+            { category: "Bomba", text: "💣 BOMBA: Cuenta la peor pelea o discusión que hayas tenido 👊", drinks: 5, drinkType: "alternative" },
+            { category: "Bomba", text: "💣 BOMBA: Di qué cambiarías de cada persona del grupo 🔧", drinks: 5, drinkType: "alternative" }
         ];
 
         const app = createApp({
@@ -839,6 +838,37 @@
                     return emojis[category] || '🔥';
                 };
 
+                const getDrinkText = (challenge) => {
+                    if (!challenge) return '';
+                    const d = challenge.drinks;
+                    const plural = d > 1 ? 's' : '';
+
+                    switch (challenge.drinkType) {
+                        case 'guilty':
+                            return `Si lo has hecho, bebe ${d} trago${plural}`;
+                        case 'alternative':
+                            return `O bebe ${d} trago${plural}`;
+                        case 'voted':
+                            return `El/la votado/a bebe ${d} trago${plural}`;
+                        case 'loser':
+                            return `El perdedor bebe ${d} trago${plural}`;
+                        case 'chosen':
+                            return `Si no lo hace, bebe ${d} trago${plural}`;
+                        case 'applicable':
+                            return `Los que apliquen beben ${d} trago${plural}`;
+                        case 'everyone':
+                            return `Todos beben ${d} trago${plural}`;
+                        case 'distribute':
+                            return `Reparte ${d} tragos`;
+                        case 'fail':
+                            return `El que falle bebe ${d} trago${plural}`;
+                        case 'none':
+                            return 'Sin bebida';
+                        default:
+                            return `Bebe ${d} trago${plural}`;
+                    }
+                };
+
                 return {
                     screen,
                     players,
@@ -853,7 +883,8 @@
                     nextTurn,
                     endGame,
                     getCategoryColor,
-                    getCategoryEmoji
+                    getCategoryEmoji,
+                    getDrinkText
                 };
             }
         });
