@@ -1,29 +1,687 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🍻 Previas - Juego de Beber</title>
-    
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Vue 3 CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    
-    <!-- Firebase SDK 9+ (Modular via CDN) -->
-    <script type="module">
-        // Firebase imports
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, push, onValue, update, remove, get, child, onDisconnect } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-        
+
+    <script>
+        // Configure Tailwind
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-pink': '#ff2d75',
+                        'neon-cyan': '#00f5ff',
+                        'neon-purple': '#7c3aed',
+                        'dark-bg': '#0f0f1a',
+                        'card-bg': '#1a1a2e',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #0f0f1a;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Animated gradient background */
+        .animated-bg {
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Neon glow effects */
+        .neon-pink-glow {
+            box-shadow: 0 0 20px rgba(255, 45, 117, 0.5),
+                0 0 40px rgba(255, 45, 117, 0.3),
+                0 0 60px rgba(255, 45, 117, 0.1);
+        }
+
+        .neon-cyan-glow {
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5),
+                0 0 40px rgba(0, 245, 255, 0.3),
+                0 0 60px rgba(0, 245, 255, 0.1);
+        }
+
+        .neon-purple-glow {
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5),
+                0 0 40px rgba(124, 58, 237, 0.3),
+                0 0 60px rgba(124, 58, 237, 0.1);
+        }
+
+        /* Glowing text */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(255, 45, 117, 0.8),
+                0 0 20px rgba(255, 45, 117, 0.6),
+                0 0 30px rgba(255, 45, 117, 0.4);
+        }
+
+        .glow-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.8),
+                0 0 20px rgba(0, 245, 255, 0.6),
+                0 0 30px rgba(0, 245, 255, 0.4);
+        }
+
+        /* Button styles */
+        .btn-neon {
+            position: relative;
+            padding: 18px 36px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-pink {
+            background: linear-gradient(135deg, #ff2d75 0%, #ff6b9d 100%);
+            color: white;
+        }
+
+        .btn-pink:hover,
+        .btn-pink:active {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 45, 117, 0.7),
+                0 0 60px rgba(255, 45, 117, 0.4);
+        }
+
+        .btn-cyan {
+            background: linear-gradient(135deg, #00f5ff 0%, #00c4cc 100%);
+            color: #0f0f1a;
+        }
+
+        .btn-cyan:hover,
+        .btn-cyan:active {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.7),
+                0 0 60px rgba(0, 245, 255, 0.4);
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            color: white;
+        }
+
+        .btn-purple:hover,
+        .btn-purple:active {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.7),
+                0 0 60px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-neon:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Card styles */
+        .card {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px;
+        }
+
+        /* Input styles */
+        .input-neon {
+            background: rgba(15, 15, 26, 0.9);
+            border: 2px solid rgba(0, 245, 255, 0.3);
+            border-radius: 16px;
+            padding: 18px;
+            color: white;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            min-height: 60px;
+        }
+
+        .input-neon:focus {
+            outline: none;
+            border-color: #00f5ff;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+        }
+
+        .input-neon::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Player list */
+        .player-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .player-item.active {
+            background: rgba(255, 45, 117, 0.2);
+            border-color: rgba(255, 45, 117, 0.5);
+        }
+
+        .player-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Challenge card animation */
+        .challenge-card {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Pulse animation */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* Floating emojis */
+        .floating-emoji {
+            position: fixed;
+            font-size: 2rem;
+            animation: float 25s infinite linear;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.2;
+            }
+
+            90% {
+                opacity: 0.2;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Room code display */
+        .room-code {
+            font-family: 'Courier New', monospace;
+            font-size: 3rem;
+            font-weight: bold;
+            letter-spacing: 10px;
+            background: linear-gradient(135deg, #ff2d75, #00f5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Category badges */
+        .category-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 24px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .room-code {
+                font-size: 2.5rem;
+                letter-spacing: 8px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 45, 117, 0.5);
+            border-radius: 3px;
+        }
+
+        /* Mode indicator */
+        .mode-badge {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body class="animated-bg min-h-screen">
+    <div id="app" class="min-h-screen">
+        <!-- Floating background emojis -->
+        <div class="floating-emoji" style="left: 5%; animation-delay: 0s;">🍺</div>
+        <div class="floating-emoji" style="left: 25%; animation-delay: 5s;">🎉</div>
+        <div class="floating-emoji" style="left: 45%; animation-delay: 10s;">🍻</div>
+        <div class="floating-emoji" style="left: 65%; animation-delay: 15s;">🥳</div>
+        <div class="floating-emoji" style="left: 85%; animation-delay: 20s;">🎊</div>
+
+        <!-- Mode indicator -->
+        <div class="mode-badge"
+            :class="isOnlineMode ? 'bg-green-500/20 text-green-400 border border-green-500/50' : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50'">
+            {{ isOnlineMode ? '🌐 Online' : '📱 Local' }}
+        </div>
+
+        <!-- Main Container -->
+        <div class="min-h-screen flex flex-col items-center justify-center p-5 relative z-10">
+
+            <!-- ==================== START SCREEN ==================== -->
+            <div v-if="screen === 'start'" class="w-full max-w-md">
+                <div class="text-center mb-10">
+                    <h1 class="text-6xl font-bold text-white glow-text mb-3">🍻</h1>
+                    <h2 class="text-4xl font-bold text-white glow-text mb-2">PREVIAS</h2>
+                    <p class="text-gray-400 text-lg">El juego de beber definitivo</p>
+                </div>
+
+                <div class="card space-y-5">
+                    <!-- Local Game (works without Firebase) -->
+                    <button @click="startLocalGame" class="btn-neon btn-pink w-full">
+                        🎮 Juego Local
+                    </button>
+
+                    <div class="flex items-center gap-4 my-4">
+                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+                        <span class="text-gray-500 text-sm">multijugador online</span>
+                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+                    </div>
+
+                    <!-- Online Mode -->
+                    <button @click="createRoom" class="btn-neon btn-purple w-full" :disabled="!firebaseReady">
+                        🎲 Crear Sala Online
+                    </button>
+
+                    <div class="space-y-4">
+                        <input v-model="roomCodeInput" type="text" placeholder="Código de sala (4 letras)"
+                            class="input-neon text-center uppercase" maxlength="4"
+                            style="letter-spacing: 8px; font-weight: bold;">
+                        <button @click="screen = 'join'" class="btn-neon btn-cyan w-full"
+                            :disabled="roomCodeInput.length !== 4 || !firebaseReady">
+                            🚀 Unirse a Sala
+                        </button>
+                    </div>
+
+                    <p v-if="!firebaseReady" class="text-yellow-400 text-sm text-center mt-2">
+                        ⚠️ Firebase no configurado. Usa "Juego Local" o configura Firebase.
+                    </p>
+                </div>
+
+                <p v-if="errorMessage" class="text-red-400 text-center mt-4 animate-pulse">
+                    {{ errorMessage }}
+                </p>
+            </div>
+
+            <!-- ==================== ADD PLAYERS SCREEN (LOCAL MODE) ==================== -->
+            <div v-if="screen === 'addPlayers'" class="w-full max-w-md">
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl font-bold text-white glow-text mb-2">👥 Añadir Jugadores</h1>
+                    <p class="text-gray-400">Mínimo 2 jugadores para empezar</p>
+                </div>
+
+                <div class="card">
+                    <!-- Add player form -->
+                    <div class="flex gap-3 mb-6">
+                        <input v-model="newPlayerName" type="text" placeholder="Nombre del jugador..."
+                            class="input-neon flex-1" maxlength="15" @keyup.enter="addLocalPlayer">
+                        <button @click="addLocalPlayer" class="btn-neon btn-cyan" :disabled="!newPlayerName.trim()"
+                            style="min-width: 60px;">
+                            ➕
+                        </button>
+                    </div>
+
+                    <!-- Player list -->
+                    <div class="space-y-2 mb-6 max-h-60 overflow-y-auto">
+                        <div v-for="(player, index) in localPlayers" :key="index" class="player-item">
+                            <div class="player-avatar bg-gradient-to-br from-pink-500 to-purple-600">
+                                {{ player.charAt(0).toUpperCase() }}
+                            </div>
+                            <span class="text-white font-medium flex-1">{{ player }}</span>
+                            <button @click="removeLocalPlayer(index)"
+                                class="text-red-400 hover:text-red-300 text-xl px-2">
+                                ✕
+                            </button>
+                        </div>
+
+                        <div v-if="localPlayers.length === 0" class="text-center text-gray-500 py-8">
+                            <p class="text-4xl mb-2">🎭</p>
+                            <p>Añade jugadores para empezar</p>
+                        </div>
+                    </div>
+
+                    <!-- Start button -->
+                    <button @click="startLocalGameWithPlayers" class="btn-neon btn-pink w-full"
+                        :disabled="localPlayers.length < 2">
+                        🎮 Empezar Partida ({{ localPlayers.length }} jugadores)
+                    </button>
+                </div>
+
+                <button @click="screen = 'start'"
+                    class="text-gray-500 hover:text-white transition-colors w-full py-4 mt-2 text-center">
+                    ← Volver
+                </button>
+            </div>
+
+            <!-- ==================== NAME INPUT FOR ONLINE ==================== -->
+            <div v-if="screen === 'name'" class="w-full max-w-md">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-white glow-text mb-2">👋 ¿Cómo te llamas?</h1>
+                </div>
+
+                <div class="card space-y-5">
+                    <input v-model="playerName" type="text" placeholder="Tu nombre..."
+                        class="input-neon text-center text-xl" maxlength="15">
+                    <button @click="confirmCreateRoom" class="btn-neon btn-pink w-full" :disabled="!playerName.trim()">
+                        ✨ Crear Sala
+                    </button>
+                    <button @click="screen = 'start'"
+                        class="text-gray-400 hover:text-white transition-colors w-full py-2 text-center">
+                        ← Volver
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==================== JOIN ROOM ==================== -->
+            <div v-if="screen === 'join'" class="w-full max-w-md">
+                <div class="text-center mb-8">
+                    <p class="text-gray-400 mb-2">Uniéndote a sala:</p>
+                    <p class="room-code">{{ roomCodeInput.toUpperCase() }}</p>
+                </div>
+
+                <div class="card space-y-5">
+                    <input v-model="playerName" type="text" placeholder="Tu nombre..."
+                        class="input-neon text-center text-xl" maxlength="15">
+                    <button @click="joinRoom" class="btn-neon btn-cyan w-full" :disabled="!playerName.trim()">
+                        🚀 Unirse
+                    </button>
+                    <button @click="screen = 'start'; roomCodeInput = ''"
+                        class="text-gray-400 hover:text-white transition-colors w-full py-2 text-center">
+                        ← Volver
+                    </button>
+                </div>
+
+                <p v-if="errorMessage" class="text-red-400 text-center mt-4 animate-pulse">
+                    {{ errorMessage }}
+                </p>
+            </div>
+
+            <!-- ==================== LOBBY SCREEN ==================== -->
+            <div v-if="screen === 'lobby'" class="w-full max-w-md">
+                <div class="text-center mb-6">
+                    <p class="text-gray-400 mb-2">Código de sala:</p>
+                    <p class="room-code">{{ roomCode }}</p>
+                    <button @click="copyRoomCode"
+                        class="text-cyan-400 text-sm mt-3 hover:text-cyan-300 transition-colors">
+                        📋 {{ copied ? '¡Copiado!' : 'Copiar código' }}
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-2xl">👥</span>
+                        Jugadores ({{ Object.keys(players).length }})
+                    </h2>
+
+                    <div class="space-y-2 mb-6 max-h-60 overflow-y-auto">
+                        <div v-for="(player, id) in players" :key="id" class="player-item">
+                            <div class="player-avatar bg-gradient-to-br from-pink-500 to-purple-600">
+                                {{ player.name.charAt(0).toUpperCase() }}
+                            </div>
+                            <span class="text-white font-medium flex-1">{{ player.name }}</span>
+                            <span v-if="id === hostId" class="text-yellow-400 text-sm">👑</span>
+                        </div>
+
+                        <div v-if="Object.keys(players).length === 0" class="text-center text-gray-500 py-6">
+                            <p class="pulse">Esperando jugadores...</p>
+                        </div>
+                    </div>
+
+                    <!-- Host controls -->
+                    <div v-if="isHost">
+                        <button @click="startOnlineGame" class="btn-neon btn-purple w-full"
+                            :disabled="Object.keys(players).length < 2">
+                            🎮 Empezar Partida
+                        </button>
+                        <p v-if="Object.keys(players).length < 2" class="text-gray-500 text-sm text-center mt-3">
+                            Necesitas al menos 2 jugadores
+                        </p>
+                    </div>
+                    <div v-else class="text-center py-2">
+                        <p class="text-gray-400 pulse">⏳ Esperando que el host inicie...</p>
+                    </div>
+                </div>
+
+                <button @click="leaveRoom"
+                    class="text-gray-500 hover:text-red-400 transition-colors w-full py-4 mt-2 text-center">
+                    🚪 Abandonar Sala
+                </button>
+            </div>
+
+            <!-- ==================== GAME SCREEN ==================== -->
+            <div v-if="screen === 'game'" class="w-full max-w-md">
+                <!-- Turn indicator -->
+                <div class="text-center mb-3">
+                    <span class="text-gray-500 text-sm bg-gray-800/50 px-4 py-1 rounded-full">
+                        Turno {{ currentTurn + 1 }}
+                    </span>
+                </div>
+
+                <!-- Current player -->
+                <div class="text-center mb-5">
+                    <p class="text-gray-400 mb-1 text-sm">Le toca a:</p>
+                    <p class="text-4xl font-bold text-white glow-text-cyan">
+                        {{ currentPlayerName }}
+                    </p>
+                </div>
+
+                <!-- Challenge card -->
+                <div class="card challenge-card mb-5" :key="currentTurn">
+                    <div class="text-center">
+                        <!-- Category badge -->
+                        <span class="category-badge mb-4"
+                            :style="{ background: getCategoryColor(currentChallengeData?.category) }">
+                            {{ getCategoryEmoji(currentChallengeData?.category) }} {{ currentChallengeData?.category ||
+                            'Desafío' }}
+                        </span>
+
+                        <!-- Challenge text -->
+                        <p class="text-2xl text-white font-medium mt-5 leading-relaxed px-2">
+                            {{ currentChallenge }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Player list (compact) -->
+                <div class="card mb-5 py-4">
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <div v-for="(name, index) in gamePlayerNames" :key="index"
+                            class="px-4 py-2 rounded-full text-sm font-medium transition-all"
+                            :class="name === currentPlayerName ? 'bg-pink-500 text-white neon-pink-glow' : 'bg-gray-800 text-gray-400'">
+                            {{ name }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next turn button -->
+                <button @click="nextTurn" class="btn-neon btn-pink w-full">
+                    ⏭️ Siguiente Turno
+                </button>
+
+                <button @click="endGame"
+                    class="text-gray-500 hover:text-red-400 transition-colors w-full py-4 mt-2 text-center">
+                    🚪 Terminar Partida
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, computed, onMounted, onUnmounted } = Vue;
+
         // ============================================================
-        // 🔥 FIREBASE CONFIGURATION - PLACEHOLDER
+        // 🎮 CHALLENGES / DESAFÍOS (30+)
         // ============================================================
-        // Reemplaza estos valores con tus credenciales de Firebase
-        // Puedes obtenerlas en: https://console.firebase.google.com
+        const challenges = [
+            // YO NUNCA (7)
+            { category: "Yo Nunca", text: "Yo nunca... he besado a alguien en esta sala 💋" },
+            { category: "Yo Nunca", text: "Yo nunca... me he quedado dormido/a en un bar 😴" },
+            { category: "Yo Nunca", text: "Yo nunca... he enviado un mensaje borracho/a del que me arrepiento 📱" },
+            { category: "Yo Nunca", text: "Yo nunca... he fingido estar sobrio/a delante de mis padres 🤫" },
+            { category: "Yo Nunca", text: "Yo nunca... he vomitado en un taxi o Uber 🚕" },
+            { category: "Yo Nunca", text: "Yo nunca... he llorado por amor 💔" },
+            { category: "Yo Nunca", text: "Yo nunca... he stalkeado a un ex en redes sociales 👀" },
+
+            // VERDAD (4)
+            { category: "Verdad", text: "¿Cuál es tu secreto más vergonzoso? Confiesa o bebe 3 tragos 🤐" },
+            { category: "Verdad", text: "¿Con quién de esta sala te irías de vacaciones? 🏖️" },
+            { category: "Verdad", text: "¿Cuál fue tu peor cita? Cuenta o bebe 2 tragos 💀" },
+            { category: "Verdad", text: "¿Qué es lo más ilegal que has hecho? 🚨" },
+
+            // RETO (6)
+            { category: "Reto", text: "Imita a otro jugador hasta que alguien adivine quién es 🎭" },
+            { category: "Reto", text: "Mantén contacto visual con alguien durante 30 segundos sin reírte 👁️" },
+            { category: "Reto", text: "Deja que alguien publique lo que quiera en tu Instagram 📱" },
+            { category: "Reto", text: "Haz tu mejor intento de baile sexy 💃" },
+            { category: "Reto", text: "Llama a tu ex y dile que le echas de menos (o bebe 5 tragos) 📞" },
+            { category: "Reto", text: "Deja que el grupo elija tu foto de perfil por 24h 📸" },
+
+            // CASCADA (3)
+            { category: "Cascada", text: "¡CASCADA! Todos beben en orden. Solo puedes parar cuando pare el de tu izquierda 🌊" },
+            { category: "Cascada", text: "¡MINI CASCADA! Todos beben mientras cuentas hasta 5 🔢" },
+            { category: "Cascada", text: "¡CASCADA INVERSA! Empieza por el de la derecha 🔄" },
+
+            // REGLA NUEVA (4)
+            { category: "Regla Nueva", text: "Nueva regla: Nadie puede decir 'yo' hasta el próximo turno. El que lo diga, bebe 🙊" },
+            { category: "Regla Nueva", text: "Nueva regla: Antes de beber hay que hacer un brindis. El que no lo haga, bebe doble 🥂" },
+            { category: "Regla Nueva", text: "Nueva regla: Solo se puede beber con la mano izquierda 🖐️" },
+            { category: "Regla Nueva", text: "Nueva regla: Hay que hablar en tercera persona. El que falle, bebe 👤" },
+
+            // TOMA X (6)
+            { category: "Toma", text: "Todos los que tengan pareja, ¡bebed! 💑" },
+            { category: "Toma", text: "Quien haya llegado tarde hoy, bebe 2 tragos ⏰" },
+            { category: "Toma", text: "El más joven de la sala bebe 🍼" },
+            { category: "Toma", text: "Quien tenga el pelo más largo, bebe 💇" },
+            { category: "Toma", text: "Todos los que lleven algo negro, ¡bebed! 🖤" },
+            { category: "Toma", text: "El último que miró el móvil, bebe 📲" },
+
+            // ELIGE (4)
+            { category: "Elige", text: "Elige a alguien para que se tome 3 tragos 🎯" },
+            { category: "Elige", text: "Elige a alguien para intercambiar bebidas 🔄" },
+            { category: "Elige", text: "Elige a 2 personas: deben mantener los meñiques entrelazados hasta el próximo turno 🤙" },
+            { category: "Elige", text: "Elige a alguien para un duelo de piedra, papel o tijera. El perdedor bebe ✂️" },
+
+            // GRUPAL (4)
+            { category: "Grupal", text: "¡Todos beben! 🍺🍺🍺" },
+            { category: "Grupal", text: "El último en tocar el suelo, bebe 👇" },
+            { category: "Grupal", text: "El primero en nombrar 5 capitales de Europa se salva, los demás beben 🌍" },
+            { category: "Grupal", text: "Quien tenga el cumpleaños más cercano, reparte 3 tragos como quiera 🎂" }
+        ];
+
         // ============================================================
-        const firebaseConfig = {
+        // 🔥 FIREBASE CONFIGURATION
+        // ============================================================
+        // Cambia PLACEHOLDER por tus credenciales de Firebase
+        // ============================================================
+        const FIREBASE_CONFIG = {
             apiKey: "PLACEHOLDER_API_KEY",
             authDomain: "PLACEHOLDER_AUTH_DOMAIN",
             databaseURL: "PLACEHOLDER_DATABASE_URL",
@@ -33,913 +691,450 @@
             appId: "PLACEHOLDER_APP_ID"
         };
         // ============================================================
-        // FIN DE CONFIGURACIÓN DE FIREBASE
-        // ============================================================
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        
-        // Expose Firebase functions globally for Vue
-        window.firebaseDB = {
-            database,
-            ref,
-            set,
-            push,
-            onValue,
-            update,
-            remove,
-            get,
-            child,
-            onDisconnect
-        };
-        
-        // Initialize Vue App after Firebase is ready
-        window.firebaseReady = true;
-        window.dispatchEvent(new Event('firebase-ready'));
-    </script>
-    
-    <style>
-        /* Custom Tailwind Config */
-        :root {
-            --neon-pink: #ff2d75;
-            --neon-cyan: #00f5ff;
-            --neon-purple: #7c3aed;
-            --dark-bg: #0f0f1a;
-            --card-bg: #1a1a2e;
-        }
-        
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            background: var(--dark-bg);
-            min-height: 100vh;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            overflow-x: hidden;
-        }
-        
-        /* Animated gradient background */
-        .animated-bg {
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        /* Neon glow effects */
-        .neon-pink {
-            box-shadow: 0 0 20px rgba(255, 45, 117, 0.5),
-                        0 0 40px rgba(255, 45, 117, 0.3),
-                        0 0 60px rgba(255, 45, 117, 0.1);
-        }
-        
-        .neon-cyan {
-            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5),
-                        0 0 40px rgba(0, 245, 255, 0.3),
-                        0 0 60px rgba(0, 245, 255, 0.1);
-        }
-        
-        .neon-purple {
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5),
-                        0 0 40px rgba(124, 58, 237, 0.3),
-                        0 0 60px rgba(124, 58, 237, 0.1);
-        }
-        
-        /* Glowing text */
-        .glow-text {
-            text-shadow: 0 0 10px rgba(255, 45, 117, 0.8),
-                         0 0 20px rgba(255, 45, 117, 0.6),
-                         0 0 30px rgba(255, 45, 117, 0.4);
-        }
-        
-        .glow-text-cyan {
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.8),
-                         0 0 20px rgba(0, 245, 255, 0.6),
-                         0 0 30px rgba(0, 245, 255, 0.4);
-        }
-        
-        /* Button styles */
-        .btn-neon {
-            position: relative;
-            padding: 16px 32px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-            min-height: 56px;
-        }
-        
-        .btn-pink {
-            background: linear-gradient(135deg, #ff2d75 0%, #ff6b9d 100%);
-            color: white;
-        }
-        
-        .btn-pink:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(255, 45, 117, 0.7),
-                        0 0 60px rgba(255, 45, 117, 0.4);
-        }
-        
-        .btn-pink:active {
-            transform: translateY(0);
-        }
-        
-        .btn-cyan {
-            background: linear-gradient(135deg, #00f5ff 0%, #00c4cc 100%);
-            color: #0f0f1a;
-        }
-        
-        .btn-cyan:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(0, 245, 255, 0.7),
-                        0 0 60px rgba(0, 245, 255, 0.4);
-        }
-        
-        .btn-purple {
-            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-            color: white;
-        }
-        
-        .btn-purple:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(124, 58, 237, 0.7),
-                        0 0 60px rgba(124, 58, 237, 0.4);
-        }
-        
-        /* Card styles */
-        .card {
-            background: rgba(26, 26, 46, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 24px;
-        }
-        
-        /* Input styles */
-        .input-neon {
-            background: rgba(15, 15, 26, 0.8);
-            border: 2px solid rgba(0, 245, 255, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            color: white;
-            font-size: 1rem;
-            width: 100%;
-            transition: all 0.3s ease;
-            min-height: 56px;
-        }
-        
-        .input-neon:focus {
-            outline: none;
-            border-color: #00f5ff;
-            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
-        }
-        
-        .input-neon::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-        
-        /* Player list */
-        .player-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .player-item.active {
-            background: rgba(255, 45, 117, 0.2);
-            border: 1px solid rgba(255, 45, 117, 0.5);
-        }
-        
-        .player-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-        
-        /* Challenge card animation */
-        .challenge-card {
-            animation: slideIn 0.5s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        /* Pulse animation for current player */
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        /* Floating emojis */
-        .floating-emoji {
-            position: fixed;
-            font-size: 2rem;
-            animation: float 20s infinite linear;
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        /* Room code display */
-        .room-code {
-            font-family: 'Courier New', monospace;
-            font-size: 2.5rem;
-            font-weight: bold;
-            letter-spacing: 8px;
-            background: linear-gradient(135deg, #ff2d75, #00f5ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* Category badges */
-        .category-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        /* Fade transition */
-        .fade-enter-active,
-        .fade-leave-active {
-            transition: opacity 0.3s ease;
-        }
-        
-        .fade-enter-from,
-        .fade-leave-to {
-            opacity: 0;
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 640px) {
-            .room-code {
-                font-size: 2rem;
-                letter-spacing: 6px;
-            }
-        }
-        
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 45, 117, 0.5);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 45, 117, 0.7);
-        }
-    </style>
-</head>
-<body class="animated-bg min-h-screen">
-    <div id="app">
-        <!-- Floating background emojis -->
-        <div class="floating-emoji" style="left: 10%; animation-delay: 0s;">🍺</div>
-        <div class="floating-emoji" style="left: 30%; animation-delay: 3s;">🎉</div>
-        <div class="floating-emoji" style="left: 50%; animation-delay: 6s;">🍻</div>
-        <div class="floating-emoji" style="left: 70%; animation-delay: 9s;">🥳</div>
-        <div class="floating-emoji" style="left: 90%; animation-delay: 12s;">🎊</div>
-        
-        <!-- Main Container -->
-        <div class="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
-            
-            <!-- START SCREEN -->
-            <div v-if="screen === 'start'" class="w-full max-w-md">
-                <div class="text-center mb-8">
-                    <h1 class="text-5xl font-bold text-white glow-text mb-2">🍻 PREVIAS</h1>
-                    <p class="text-gray-400 text-lg">El juego de beber definitivo</p>
-                </div>
-                
-                <div class="card space-y-4">
-                    <!-- Create Room Button -->
-                    <button @click="createRoom" class="btn-neon btn-pink w-full">
-                        🎲 Crear Sala
-                    </button>
-                    
-                    <div class="flex items-center gap-4 my-6">
-                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
-                        <span class="text-gray-500 text-sm">o</span>
-                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
-                    </div>
-                    
-                    <!-- Join Room Form -->
-                    <div class="space-y-4">
-                        <input 
-                            v-model="playerName" 
-                            type="text" 
-                            placeholder="Tu nombre..."
-                            class="input-neon"
-                            maxlength="15"
-                        >
-                        <input 
-                            v-model="roomCodeInput" 
-                            type="text" 
-                            placeholder="Código de sala (4 letras)"
-                            class="input-neon text-center uppercase"
-                            maxlength="4"
-                            @input="roomCodeInput = roomCodeInput.toUpperCase()"
-                        >
-                        <button 
-                            @click="joinRoom" 
-                            class="btn-neon btn-cyan w-full"
-                            :disabled="!playerName || roomCodeInput.length !== 4"
-                            :class="{'opacity-50 cursor-not-allowed': !playerName || roomCodeInput.length !== 4}"
-                        >
-                            🚀 Unirse a Sala
-                        </button>
-                    </div>
-                </div>
-                
-                <p v-if="errorMessage" class="text-red-400 text-center mt-4 animate-pulse">
-                    {{ errorMessage }}
-                </p>
-            </div>
-            
-            <!-- NAME INPUT FOR ROOM CREATOR -->
-            <div v-if="screen === 'name'" class="w-full max-w-md">
-                <div class="text-center mb-8">
-                    <h1 class="text-4xl font-bold text-white glow-text mb-2">👋 ¿Cómo te llamas?</h1>
-                </div>
-                
-                <div class="card space-y-4">
-                    <input 
-                        v-model="playerName" 
-                        type="text" 
-                        placeholder="Tu nombre..."
-                        class="input-neon text-center text-xl"
-                        maxlength="15"
-                        autofocus
-                    >
-                    <button 
-                        @click="confirmCreateRoom" 
-                        class="btn-neon btn-pink w-full"
-                        :disabled="!playerName"
-                        :class="{'opacity-50 cursor-not-allowed': !playerName}"
-                    >
-                        ✨ Crear Sala
-                    </button>
-                    <button @click="screen = 'start'" class="text-gray-400 hover:text-white transition-colors w-full py-2">
-                        ← Volver
-                    </button>
-                </div>
-            </div>
-            
-            <!-- LOBBY SCREEN -->
-            <div v-if="screen === 'lobby'" class="w-full max-w-md">
-                <div class="text-center mb-6">
-                    <p class="text-gray-400 mb-2">Código de sala:</p>
-                    <p class="room-code">{{ roomCode }}</p>
-                    <button 
-                        @click="copyRoomCode" 
-                        class="text-cyan-400 text-sm mt-2 hover:text-cyan-300 transition-colors"
-                    >
-                        📋 {{copied ? '¡Copiado!' : 'Copiar código'}}
-                    </button>
-                </div>
-                
-                <div class="card">
-                    <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="text-2xl">👥</span> 
-                        Jugadores ({{ Object.keys(players).length }})
-                    </h2>
-                    
-                    <div class="space-y-2 mb-6 max-h-60 overflow-y-auto">
-                        <div 
-                            v-for="(player, id) in players" 
-                            :key="id"
-                            class="player-item"
-                        >
-                            <div class="player-avatar bg-gradient-to-br from-pink-500 to-purple-600">
-                                {{ player.name.charAt(0).toUpperCase() }}
-                            </div>
-                            <span class="text-white font-medium flex-1">{{ player.name }}</span>
-                            <span v-if="id === hostId" class="text-yellow-400 text-sm">👑 Host</span>
-                        </div>
-                        
-                        <div v-if="Object.keys(players).length === 0" class="text-center text-gray-500 py-4">
-                            Esperando jugadores...
-                        </div>
-                    </div>
-                    
-                    <!-- Host controls -->
-                    <div v-if="isHost">
-                        <button 
-                            @click="startGame" 
-                            class="btn-neon btn-purple w-full"
-                            :disabled="Object.keys(players).length < 2"
-                            :class="{'opacity-50 cursor-not-allowed': Object.keys(players).length < 2}"
-                        >
-                            🎮 Empezar Partida
-                        </button>
-                        <p v-if="Object.keys(players).length < 2" class="text-gray-500 text-sm text-center mt-2">
-                            Necesitas al menos 2 jugadores
-                        </p>
-                    </div>
-                    <div v-else class="text-center">
-                        <p class="text-gray-400 pulse">⏳ Esperando que el host inicie...</p>
-                    </div>
-                </div>
-                
-                <button @click="leaveRoom" class="text-gray-500 hover:text-red-400 transition-colors w-full py-4 mt-2">
-                    🚪 Abandonar Sala
-                </button>
-            </div>
-            
-            <!-- GAME SCREEN -->
-            <div v-if="screen === 'game'" class="w-full max-w-md">
-                <!-- Turn indicator -->
-                <div class="text-center mb-4">
-                    <p class="text-gray-400 text-sm">Turno {{ currentTurn + 1 }}</p>
-                </div>
-                
-                <!-- Current player -->
-                <div class="text-center mb-6">
-                    <p class="text-gray-400 mb-1">Le toca a:</p>
-                    <p class="text-3xl font-bold text-white glow-text-cyan">
-                        {{ currentPlayerName }}
-                    </p>
-                </div>
-                
-                <!-- Challenge card -->
-                <div class="card challenge-card mb-6" :key="currentTurn">
-                    <div class="text-center">
-                        <!-- Category badge -->
-                        <span 
-                            class="category-badge mb-4"
-                            :style="{ background: getCategoryColor(currentChallengeData?.category) }"
-                        >
-                            {{ getCategoryEmoji(currentChallengeData?.category) }} {{ currentChallengeData?.category }}
-                        </span>
-                        
-                        <!-- Challenge text -->
-                        <p class="text-2xl text-white font-medium mt-4 leading-relaxed">
-                            {{ currentChallenge }}
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Player list (compact) -->
-                <div class="card mb-4">
-                    <div class="flex flex-wrap gap-2 justify-center">
-                        <div 
-                            v-for="(player, id) in players" 
-                            :key="id"
-                            class="px-3 py-1 rounded-full text-sm transition-all"
-                            :class="id === currentPlayerId ? 'bg-pink-500 text-white neon-pink' : 'bg-gray-800 text-gray-400'"
-                        >
-                            {{ player.name }}
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Next turn button -->
-                <button 
-                    @click="nextTurn" 
-                    class="btn-neon btn-pink w-full"
-                >
-                    ⏭️ Siguiente Turno
-                </button>
-                
-                <button @click="leaveRoom" class="text-gray-500 hover:text-red-400 transition-colors w-full py-4 mt-2">
-                    🚪 Abandonar Partida
-                </button>
-            </div>
-            
-        </div>
-    </div>
-    
-    <script>
-        // Wait for Firebase to be ready
-        function initApp() {
-            const { createApp, ref: vueRef, onMounted, onUnmounted, computed, watch } = Vue;
-            
-            // ============================================================
-            // 🎮 CHALLENGES / DESAFÍOS
-            // ============================================================
-            const challenges = [
-                // YO NUNCA
-                { category: "Yo Nunca", text: "Yo nunca... he besado a alguien en esta sala 💋" },
-                { category: "Yo Nunca", text: "Yo nunca... me he quedado dormido/a en un bar 😴" },
-                { category: "Yo Nunca", text: "Yo nunca... he enviado un mensaje borracho/a del que me arrepiento 📱" },
-                { category: "Yo Nunca", text: "Yo nunca... he fingido estar sobrio/a delante de mis padres 🤫" },
-                { category: "Yo Nunca", text: "Yo nunca... he vomitado en un taxi 🚕" },
-                { category: "Yo Nunca", text: "Yo nunca... he llorado por una película 🎬" },
-                { category: "Yo Nunca", text: "Yo nunca... he stalkeado a un ex en redes sociales 👀" },
-                
-                // VERDAD O RETO
-                { category: "Verdad", text: "¿Cuál es tu secreto más vergonzoso? Confiesa o bebe 3 tragos 🤐" },
-                { category: "Verdad", text: "¿Con quién de esta sala te irías de vacaciones? 🏖️" },
-                { category: "Reto", text: "Imita a otro jugador hasta que alguien adivine quién es 🎭" },
-                { category: "Reto", text: "Mantén contacto visual con alguien durante 30 segundos sin reírte 👁️" },
-                { category: "Reto", text: "Deja tu teléfono desbloqueado 1 minuto para que cualquiera lea 📱" },
-                { category: "Reto", text: "Haz tu mejor intento de baile sexy 💃" },
-                
-                // CASCADA
-                { category: "Cascada", text: "¡CASCADA! Todos beben en orden, solo puedes parar cuando pare el de tu izquierda 🌊" },
-                { category: "Cascada", text: "¡MINI CASCADA! Cuenta hasta 5 mientras todos beben 🔢" },
-                
-                // REGLA NUEVA
-                { category: "Regla Nueva", text: "Nueva regla: Nadie puede decir 'yo' hasta el próximo turno. El que lo diga, bebe 🙊" },
-                { category: "Regla Nueva", text: "Nueva regla: Antes de beber hay que hacer un brindis. El que no lo haga, bebe doble 🥂" },
-                { category: "Regla Nueva", text: "Nueva regla: Solo se puede beber con la mano izquierda. El que use la derecha, bebe extra 🖐️" },
-                
-                // TOMA X
-                { category: "Toma", text: "Todos los que tengan pareja, ¡bebed! 💑" },
-                { category: "Toma", text: "Quien haya llegado tarde hoy, bebe 2 tragos ⏰" },
-                { category: "Toma", text: "El más joven de la sala bebe 🍼" },
-                { category: "Toma", text: "Quien tenga el pelo más largo, bebe 💇" },
-                { category: "Toma", text: "Todos los que lleven algo azul, ¡bebed! 💙" },
-                { category: "Toma", text: "Quien haya mirado el móvil en los últimos 5 minutos, bebe 📲" },
-                
-                // ELIGE A ALGUIEN
-                { category: "Elige", text: "Elige a alguien para que se tome 3 tragos 🎯" },
-                { category: "Elige", text: "Elige a alguien para intercambiar bebidas 🔄" },
-                { category: "Elige", text: "Elige a 2 personas: deben mantener los meñiques entrelazados hasta el próximo turno 🤙" },
-                { category: "Elige", text: "Elige a alguien para hacer un duelo: piedra, papel o tijera. El perdedor bebe ✂️" },
-                
-                // GRUPALES
-                { category: "Grupal", text: "¡Todos beben! 🍺🍺🍺" },
-                { category: "Grupal", text: "El último en tocar el suelo, bebe 👇" },
-                { category: "Grupal", text: "El primero en nombrar 5 capitales europeas se salva, los demás beben 🌍" },
-                { category: "Grupal", text: "Quien tenga el cumpleaños más cercano, reparte 3 tragos como quiera 🎂" }
-            ];
-            
-            const app = createApp({
-                setup() {
-                    const { database, ref: dbRef, set, push, onValue, update, remove, get, child, onDisconnect } = window.firebaseDB;
-                    
-                    // State
-                    const screen = vueRef('start');
-                    const playerName = vueRef('');
-                    const roomCode = vueRef('');
-                    const roomCodeInput = vueRef('');
-                    const playerId = vueRef('');
-                    const hostId = vueRef('');
-                    const players = vueRef({});
-                    const currentTurn = vueRef(0);
-                    const currentChallenge = vueRef('');
-                    const currentPlayerId = vueRef('');
-                    const currentChallengeData = vueRef(null);
-                    const errorMessage = vueRef('');
-                    const copied = vueRef(false);
-                    const unsubscribers = vueRef([]);
-                    
-                    // Computed
-                    const isHost = computed(() => playerId.value === hostId.value);
-                    const currentPlayerName = computed(() => {
-                        if (currentPlayerId.value && players.value[currentPlayerId.value]) {
-                            return players.value[currentPlayerId.value].name;
-                        }
-                        return '...';
-                    });
-                    
-                    // Methods
-                    const generateRoomCode = () => {
-                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                        let code = '';
-                        for (let i = 0; i < 4; i++) {
-                            code += chars.charAt(Math.floor(Math.random() * chars.length));
-                        }
-                        return code;
-                    };
-                    
-                    const generatePlayerId = () => {
-                        return 'player_' + Math.random().toString(36).substr(2, 9);
-                    };
-                    
-                    const createRoom = () => {
-                        screen.value = 'name';
-                    };
-                    
-                    const confirmCreateRoom = async () => {
-                        if (!playerName.value.trim()) return;
-                        
-                        roomCode.value = generateRoomCode();
-                        playerId.value = generatePlayerId();
-                        hostId.value = playerId.value;
-                        
-                        try {
-                            // Create room in Firebase
-                            const roomRef = dbRef(database, `rooms/${roomCode.value}`);
-                            await set(roomRef, {
-                                host: playerId.value,
-                                status: 'waiting',
-                                currentTurn: 0,
-                                currentChallenge: '',
-                                currentPlayer: '',
-                                createdAt: Date.now()
-                            });
-                            
-                            // Add player
-                            const playerRef = dbRef(database, `rooms/${roomCode.value}/players/${playerId.value}`);
-                            await set(playerRef, {
-                                name: playerName.value.trim(),
-                                joinedAt: Date.now()
-                            });
-                            
-                            // Setup disconnect handler
-                            onDisconnect(playerRef).remove();
-                            
-                            // Subscribe to room updates
-                            subscribeToRoom();
-                            
-                            screen.value = 'lobby';
-                        } catch (error) {
-                            console.error('Error creating room:', error);
-                            errorMessage.value = 'Error al crear la sala. Revisa tu conexión.';
-                        }
-                    };
-                    
-                    const joinRoom = async () => {
-                        if (!playerName.value.trim() || roomCodeInput.value.length !== 4) return;
-                        
-                        roomCode.value = roomCodeInput.value.toUpperCase();
-                        playerId.value = generatePlayerId();
-                        
-                        try {
-                            // Check if room exists
-                            const roomRef = dbRef(database, `rooms/${roomCode.value}`);
-                            const snapshot = await get(roomRef);
-                            
-                            if (!snapshot.exists()) {
-                                errorMessage.value = 'Sala no encontrada. Verifica el código.';
-                                return;
-                            }
-                            
-                            const roomData = snapshot.val();
-                            if (roomData.status === 'playing') {
-                                errorMessage.value = 'La partida ya ha comenzado.';
-                                return;
-                            }
-                            
-                            hostId.value = roomData.host;
-                            
-                            // Add player to room
-                            const playerRef = dbRef(database, `rooms/${roomCode.value}/players/${playerId.value}`);
-                            await set(playerRef, {
-                                name: playerName.value.trim(),
-                                joinedAt: Date.now()
-                            });
-                            
-                            // Setup disconnect handler
-                            onDisconnect(playerRef).remove();
-                            
-                            // Subscribe to room updates
-                            subscribeToRoom();
-                            
-                            screen.value = 'lobby';
-                            errorMessage.value = '';
-                        } catch (error) {
-                            console.error('Error joining room:', error);
-                            errorMessage.value = 'Error al unirse. Revisa tu conexión.';
-                        }
-                    };
-                    
-                    const subscribeToRoom = () => {
-                        const roomRef = dbRef(database, `rooms/${roomCode.value}`);
-                        
-                        const unsubscribe = onValue(roomRef, (snapshot) => {
-                            if (!snapshot.exists()) {
-                                // Room was deleted
-                                cleanup();
-                                screen.value = 'start';
-                                errorMessage.value = 'La sala ha sido cerrada.';
-                                return;
-                            }
-                            
-                            const data = snapshot.val();
-                            hostId.value = data.host;
-                            players.value = data.players || {};
-                            
-                            if (data.status === 'playing') {
-                                screen.value = 'game';
-                                currentTurn.value = data.currentTurn || 0;
-                                currentChallenge.value = data.currentChallenge || '';
-                                currentPlayerId.value = data.currentPlayer || '';
-                                
-                                // Find challenge data
-                                const found = challenges.find(c => c.text === data.currentChallenge);
-                                currentChallengeData.value = found || null;
-                            }
-                        });
-                        
-                        unsubscribers.value.push(unsubscribe);
-                    };
-                    
-                    const startGame = async () => {
-                        if (!isHost.value) return;
-                        
-                        const playerIds = Object.keys(players.value);
-                        if (playerIds.length < 2) return;
-                        
-                        // Select random first player and challenge
-                        const firstPlayer = playerIds[Math.floor(Math.random() * playerIds.length)];
-                        const firstChallenge = challenges[Math.floor(Math.random() * challenges.length)];
-                        
-                        try {
-                            const roomRef = dbRef(database, `rooms/${roomCode.value}`);
-                            await update(roomRef, {
-                                status: 'playing',
-                                currentTurn: 0,
-                                currentPlayer: firstPlayer,
-                                currentChallenge: firstChallenge.text
-                            });
-                        } catch (error) {
-                            console.error('Error starting game:', error);
-                        }
-                    };
-                    
-                    const nextTurn = async () => {
-                        const playerIds = Object.keys(players.value);
-                        if (playerIds.length === 0) return;
-                        
-                        // Select next player (could be random or sequential)
-                        const nextPlayer = playerIds[Math.floor(Math.random() * playerIds.length)];
-                        const nextChallenge = challenges[Math.floor(Math.random() * challenges.length)];
-                        
-                        try {
-                            const roomRef = dbRef(database, `rooms/${roomCode.value}`);
-                            await update(roomRef, {
-                                currentTurn: currentTurn.value + 1,
-                                currentPlayer: nextPlayer,
-                                currentChallenge: nextChallenge.text
-                            });
-                        } catch (error) {
-                            console.error('Error advancing turn:', error);
-                        }
-                    };
-                    
-                    const leaveRoom = async () => {
-                        try {
-                            const playerRef = dbRef(database, `rooms/${roomCode.value}/players/${playerId.value}`);
-                            await remove(playerRef);
-                            
-                            // If host leaves and game hasn't started, delete room
-                            if (isHost.value) {
-                                const roomRef = dbRef(database, `rooms/${roomCode.value}`);
-                                const snapshot = await get(roomRef);
-                                if (snapshot.exists()) {
-                                    const data = snapshot.val();
-                                    if (data.status === 'waiting' || Object.keys(data.players || {}).length <= 1) {
-                                        await remove(roomRef);
-                                    }
-                                }
-                            }
-                        } catch (error) {
-                            console.error('Error leaving room:', error);
-                        }
-                        
-                        cleanup();
-                        screen.value = 'start';
-                    };
-                    
-                    const cleanup = () => {
-                        unsubscribers.value.forEach(unsub => unsub());
-                        unsubscribers.value = [];
-                        players.value = {};
+
+        // Check if Firebase is configured
+        const isFirebaseConfigured = !FIREBASE_CONFIG.apiKey.includes('PLACEHOLDER');
+
+        // Firebase will be loaded dynamically if configured
+        let firebaseApp = null;
+        let firebaseDatabase = null;
+        let firebaseFunctions = null;
+
+        const app = createApp({
+            setup() {
+                // State
+                const screen = ref('start');
+                const firebaseReady = ref(false);
+                const isOnlineMode = ref(false);
+
+                // Player info
+                const playerName = ref('');
+                const newPlayerName = ref('');
+                const localPlayers = ref([]);
+
+                // Room info
+                const roomCode = ref('');
+                const roomCodeInput = ref('');
+                const playerId = ref('');
+                const hostId = ref('');
+                const players = ref({});
+
+                // Game state
+                const currentTurn = ref(0);
+                const currentChallenge = ref('');
+                const currentPlayerName = ref('');
+                const currentChallengeData = ref(null);
+                const currentPlayerIndex = ref(0);
+
+                // UI state
+                const errorMessage = ref('');
+                const copied = ref(false);
+
+                // Computed
+                const isHost = computed(() => playerId.value === hostId.value);
+                const gamePlayerNames = computed(() => {
+                    if (isOnlineMode.value) {
+                        return Object.values(players.value).map(p => p.name);
+                    }
+                    return localPlayers.value;
+                });
+
+                // ==================== LOCAL GAME METHODS ====================
+
+                const startLocalGame = () => {
+                    isOnlineMode.value = false;
+                    screen.value = 'addPlayers';
+                };
+
+                const addLocalPlayer = () => {
+                    const name = newPlayerName.value.trim();
+                    if (name && !localPlayers.value.includes(name)) {
+                        localPlayers.value.push(name);
+                        newPlayerName.value = '';
+                    }
+                };
+
+                const removeLocalPlayer = (index) => {
+                    localPlayers.value.splice(index, 1);
+                };
+
+                const startLocalGameWithPlayers = () => {
+                    if (localPlayers.value.length < 2) return;
+
+                    // Pick random first player and challenge
+                    currentPlayerIndex.value = Math.floor(Math.random() * localPlayers.value.length);
+                    currentPlayerName.value = localPlayers.value[currentPlayerIndex.value];
+                    pickRandomChallenge();
+                    currentTurn.value = 0;
+                    screen.value = 'game';
+                };
+
+                const pickRandomChallenge = () => {
+                    const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+                    currentChallenge.value = challenge.text;
+                    currentChallengeData.value = challenge;
+                };
+
+                const nextTurn = () => {
+                    if (isOnlineMode.value) {
+                        nextTurnOnline();
+                    } else {
+                        // Local mode: rotate player
+                        currentPlayerIndex.value = (currentPlayerIndex.value + 1) % localPlayers.value.length;
+                        currentPlayerName.value = localPlayers.value[currentPlayerIndex.value];
+                        pickRandomChallenge();
+                        currentTurn.value++;
+                    }
+                };
+
+                const endGame = () => {
+                    if (isOnlineMode.value) {
+                        leaveRoom();
+                    } else {
+                        localPlayers.value = [];
                         currentTurn.value = 0;
-                        currentChallenge.value = '';
-                        currentPlayerId.value = '';
-                        roomCode.value = '';
-                        roomCodeInput.value = '';
-                    };
-                    
-                    const copyRoomCode = async () => {
-                        try {
-                            await navigator.clipboard.writeText(roomCode.value);
-                            copied.value = true;
-                            setTimeout(() => copied.value = false, 2000);
-                        } catch (error) {
-                            console.error('Error copying:', error);
+                        screen.value = 'start';
+                    }
+                };
+
+                // ==================== ONLINE GAME METHODS ====================
+
+                const generateRoomCode = () => {
+                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    let code = '';
+                    for (let i = 0; i < 4; i++) {
+                        code += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    return code;
+                };
+
+                const generatePlayerId = () => {
+                    return 'player_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                };
+
+                const createRoom = () => {
+                    if (!firebaseReady.value) {
+                        errorMessage.value = 'Firebase no está configurado';
+                        return;
+                    }
+                    isOnlineMode.value = true;
+                    screen.value = 'name';
+                };
+
+                const confirmCreateRoom = async () => {
+                    if (!playerName.value.trim() || !firebaseReady.value) return;
+
+                    roomCode.value = generateRoomCode();
+                    playerId.value = generatePlayerId();
+                    hostId.value = playerId.value;
+
+                    try {
+                        const { ref: dbRef, set, onDisconnect } = firebaseFunctions;
+
+                        // Create room
+                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
+                        await set(roomRef, {
+                            host: playerId.value,
+                            status: 'waiting',
+                            currentTurn: 0,
+                            currentChallenge: '',
+                            currentPlayer: '',
+                            createdAt: Date.now()
+                        });
+
+                        // Add player
+                        const playerRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}/players/${playerId.value}`);
+                        await set(playerRef, {
+                            name: playerName.value.trim(),
+                            joinedAt: Date.now()
+                        });
+
+                        onDisconnect(playerRef).remove();
+                        subscribeToRoom();
+                        screen.value = 'lobby';
+                        errorMessage.value = '';
+                    } catch (error) {
+                        console.error('Error creating room:', error);
+                        errorMessage.value = 'Error al crear la sala: ' + error.message;
+                    }
+                };
+
+                const joinRoom = async () => {
+                    if (!playerName.value.trim() || roomCodeInput.value.length !== 4 || !firebaseReady.value) return;
+
+                    roomCode.value = roomCodeInput.value.toUpperCase();
+                    playerId.value = generatePlayerId();
+
+                    try {
+                        const { ref: dbRef, get, set, onDisconnect } = firebaseFunctions;
+
+                        // Check room exists
+                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
+                        const snapshot = await get(roomRef);
+
+                        if (!snapshot.exists()) {
+                            errorMessage.value = 'Sala no encontrada. Verifica el código.';
+                            return;
                         }
-                    };
-                    
-                    const getCategoryColor = (category) => {
-                        const colors = {
-                            'Yo Nunca': 'linear-gradient(135deg, #ff2d75, #ff6b9d)',
-                            'Verdad': 'linear-gradient(135deg, #00f5ff, #00c4cc)',
-                            'Reto': 'linear-gradient(135deg, #7c3aed, #a855f7)',
-                            'Cascada': 'linear-gradient(135deg, #3b82f6, #60a5fa)',
-                            'Regla Nueva': 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-                            'Toma': 'linear-gradient(135deg, #10b981, #34d399)',
-                            'Elige': 'linear-gradient(135deg, #ec4899, #f472b6)',
-                            'Grupal': 'linear-gradient(135deg, #8b5cf6, #a78bfa)'
-                        };
-                        return colors[category] || 'linear-gradient(135deg, #6b7280, #9ca3af)';
-                    };
-                    
-                    const getCategoryEmoji = (category) => {
-                        const emojis = {
-                            'Yo Nunca': '🙅',
-                            'Verdad': '🤔',
-                            'Reto': '🎭',
-                            'Cascada': '🌊',
-                            'Regla Nueva': '📜',
-                            'Toma': '🍺',
-                            'Elige': '👆',
-                            'Grupal': '👥'
-                        };
-                        return emojis[category] || '🎲';
-                    };
-                    
-                    // Cleanup on unmount
-                    onUnmounted(() => {
-                        cleanup();
+
+                        const roomData = snapshot.val();
+                        if (roomData.status === 'playing') {
+                            errorMessage.value = 'La partida ya ha comenzado.';
+                            return;
+                        }
+
+                        hostId.value = roomData.host;
+
+                        // Add player
+                        const playerRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}/players/${playerId.value}`);
+                        await set(playerRef, {
+                            name: playerName.value.trim(),
+                            joinedAt: Date.now()
+                        });
+
+                        onDisconnect(playerRef).remove();
+                        subscribeToRoom();
+                        screen.value = 'lobby';
+                        errorMessage.value = '';
+                    } catch (error) {
+                        console.error('Error joining room:', error);
+                        errorMessage.value = 'Error al unirse: ' + error.message;
+                    }
+                };
+
+                let unsubscribeRoom = null;
+
+                const subscribeToRoom = () => {
+                    const { ref: dbRef, onValue } = firebaseFunctions;
+                    const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
+
+                    unsubscribeRoom = onValue(roomRef, (snapshot) => {
+                        if (!snapshot.exists()) {
+                            cleanup();
+                            screen.value = 'start';
+                            errorMessage.value = 'La sala ha sido cerrada.';
+                            return;
+                        }
+
+                        const data = snapshot.val();
+                        hostId.value = data.host;
+                        players.value = data.players || {};
+
+                        if (data.status === 'playing') {
+                            screen.value = 'game';
+                            currentTurn.value = data.currentTurn || 0;
+                            currentChallenge.value = data.currentChallenge || '';
+
+                            // Get current player name
+                            const currentPlayerId = data.currentPlayer;
+                            if (currentPlayerId && data.players && data.players[currentPlayerId]) {
+                                currentPlayerName.value = data.players[currentPlayerId].name;
+                            }
+
+                            // Find challenge data
+                            const found = challenges.find(c => c.text === data.currentChallenge);
+                            currentChallengeData.value = found || null;
+                        }
                     });
-                    
-                    return {
-                        screen,
-                        playerName,
-                        roomCode,
-                        roomCodeInput,
-                        playerId,
-                        hostId,
-                        players,
-                        currentTurn,
-                        currentChallenge,
-                        currentPlayerId,
-                        currentPlayerName,
-                        currentChallengeData,
-                        errorMessage,
-                        copied,
-                        isHost,
-                        createRoom,
-                        confirmCreateRoom,
-                        joinRoom,
-                        startGame,
-                        nextTurn,
-                        leaveRoom,
-                        copyRoomCode,
-                        getCategoryColor,
-                        getCategoryEmoji
+                };
+
+                const startOnlineGame = async () => {
+                    if (!isHost.value || !firebaseReady.value) return;
+
+                    const playerIds = Object.keys(players.value);
+                    if (playerIds.length < 2) return;
+
+                    const firstPlayer = playerIds[Math.floor(Math.random() * playerIds.length)];
+                    const firstChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+
+                    try {
+                        const { ref: dbRef, update } = firebaseFunctions;
+                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
+                        await update(roomRef, {
+                            status: 'playing',
+                            currentTurn: 0,
+                            currentPlayer: firstPlayer,
+                            currentChallenge: firstChallenge.text
+                        });
+                    } catch (error) {
+                        console.error('Error starting game:', error);
+                    }
+                };
+
+                const nextTurnOnline = async () => {
+                    if (!firebaseReady.value) return;
+
+                    const playerIds = Object.keys(players.value);
+                    if (playerIds.length === 0) return;
+
+                    const nextPlayer = playerIds[Math.floor(Math.random() * playerIds.length)];
+                    const nextChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+
+                    try {
+                        const { ref: dbRef, update } = firebaseFunctions;
+                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
+                        await update(roomRef, {
+                            currentTurn: currentTurn.value + 1,
+                            currentPlayer: nextPlayer,
+                            currentChallenge: nextChallenge.text
+                        });
+                    } catch (error) {
+                        console.error('Error next turn:', error);
+                    }
+                };
+
+                const leaveRoom = async () => {
+                    if (firebaseReady.value && roomCode.value) {
+                        try {
+                            const { ref: dbRef, remove, get } = firebaseFunctions;
+                            const playerRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}/players/${playerId.value}`);
+                            await remove(playerRef);
+
+                            // If host, delete room
+                            if (isHost.value) {
+                                const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
+                                await remove(roomRef);
+                            }
+                        } catch (error) {
+                            console.error('Error leaving:', error);
+                        }
+                    }
+                    cleanup();
+                    screen.value = 'start';
+                };
+
+                const cleanup = () => {
+                    if (unsubscribeRoom) {
+                        unsubscribeRoom();
+                        unsubscribeRoom = null;
+                    }
+                    players.value = {};
+                    roomCode.value = '';
+                    roomCodeInput.value = '';
+                    currentTurn.value = 0;
+                    currentChallenge.value = '';
+                    currentPlayerName.value = '';
+                };
+
+                // ==================== UTILITY METHODS ====================
+
+                const copyRoomCode = async () => {
+                    try {
+                        await navigator.clipboard.writeText(roomCode.value);
+                        copied.value = true;
+                        setTimeout(() => copied.value = false, 2000);
+                    } catch (error) {
+                        // Fallback for older browsers
+                        const textArea = document.createElement('textarea');
+                        textArea.value = roomCode.value;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        copied.value = true;
+                        setTimeout(() => copied.value = false, 2000);
+                    }
+                };
+
+                const getCategoryColor = (category) => {
+                    const colors = {
+                        'Yo Nunca': 'linear-gradient(135deg, #ff2d75, #ff6b9d)',
+                        'Verdad': 'linear-gradient(135deg, #00f5ff, #00c4cc)',
+                        'Reto': 'linear-gradient(135deg, #7c3aed, #a855f7)',
+                        'Cascada': 'linear-gradient(135deg, #3b82f6, #60a5fa)',
+                        'Regla Nueva': 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+                        'Toma': 'linear-gradient(135deg, #10b981, #34d399)',
+                        'Elige': 'linear-gradient(135deg, #ec4899, #f472b6)',
+                        'Grupal': 'linear-gradient(135deg, #8b5cf6, #a78bfa)'
                     };
-                }
-            });
-            
-            app.mount('#app');
-        }
-        
-        // Initialize when Firebase is ready
-        if (window.firebaseReady) {
-            initApp();
-        } else {
-            window.addEventListener('firebase-ready', initApp);
-        }
+                    return colors[category] || 'linear-gradient(135deg, #6b7280, #9ca3af)';
+                };
+
+                const getCategoryEmoji = (category) => {
+                    const emojis = {
+                        'Yo Nunca': '🙅',
+                        'Verdad': '🤔',
+                        'Reto': '🎭',
+                        'Cascada': '🌊',
+                        'Regla Nueva': '📜',
+                        'Toma': '🍺',
+                        'Elige': '👆',
+                        'Grupal': '👥'
+                    };
+                    return emojis[category] || '🎲';
+                };
+
+                // ==================== FIREBASE INITIALIZATION ====================
+
+                onMounted(async () => {
+                    if (isFirebaseConfigured) {
+                        try {
+                            const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+                            const dbModule = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+
+                            firebaseApp = initializeApp(FIREBASE_CONFIG);
+                            firebaseDatabase = dbModule.getDatabase(firebaseApp);
+                            firebaseFunctions = dbModule;
+                            firebaseReady.value = true;
+                            console.log('✅ Firebase initialized successfully');
+                        } catch (error) {
+                            console.error('❌ Firebase initialization failed:', error);
+                            firebaseReady.value = false;
+                        }
+                    } else {
+                        console.log('ℹ️ Firebase not configured. Running in local mode only.');
+                    }
+                });
+
+                onUnmounted(() => {
+                    cleanup();
+                });
+
+                return {
+                    // State
+                    screen,
+                    firebaseReady,
+                    isOnlineMode,
+                    playerName,
+                    newPlayerName,
+                    localPlayers,
+                    roomCode,
+                    roomCodeInput,
+                    playerId,
+                    hostId,
+                    players,
+                    currentTurn,
+                    currentChallenge,
+                    currentPlayerName,
+                    currentChallengeData,
+                    errorMessage,
+                    copied,
+
+                    // Computed
+                    isHost,
+                    gamePlayerNames,
+
+                    // Methods
+                    startLocalGame,
+                    addLocalPlayer,
+                    removeLocalPlayer,
+                    startLocalGameWithPlayers,
+                    nextTurn,
+                    endGame,
+                    createRoom,
+                    confirmCreateRoom,
+                    joinRoom,
+                    startOnlineGame,
+                    leaveRoom,
+                    copyRoomCode,
+                    getCategoryColor,
+                    getCategoryEmoji
+                };
+            }
+        });
+
+        app.mount('#app');
     </script>
 </body>
+
 </html>
