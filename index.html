@@ -153,7 +153,6 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            width: 100%;
             padding: clamp(16px, 4vw, 20px) 24px;
             border-radius: 14px;
             font-weight: 800;
@@ -165,6 +164,10 @@
             transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
+        }
+
+        .btn-full {
+            width: 100%;
         }
 
         .btn-primary {
@@ -179,17 +182,6 @@
             box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5);
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: #888;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-secondary:hover {
-            color: #ff4444;
-            border-color: rgba(255, 0, 0, 0.3);
-        }
-
         .btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
@@ -197,23 +189,23 @@
             box-shadow: none !important;
         }
 
-        .btn-small {
-            padding: 14px 20px;
-            min-width: 56px;
+        .btn-add {
+            padding: 16px 20px;
+            flex-shrink: 0;
             font-size: 1.2rem;
         }
 
         /* Input */
         .input {
-            width: 100%;
             background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-            padding: clamp(14px, 3.5vw, 18px);
+            padding: 16px;
             color: white;
-            font-size: clamp(0.95rem, 3vw, 1.05rem);
+            font-size: 1rem;
             font-weight: 500;
             transition: all 0.25s ease;
+            min-width: 0;
         }
 
         .input:focus {
@@ -223,18 +215,24 @@
         }
 
         .input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.35);
         }
 
-        /* Input group */
+        /* Input group - FIXED */
         .input-group {
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
+            align-items: stretch;
         }
 
         .input-group .input {
-            flex: 1;
+            flex: 1 1 auto;
+            width: 100%;
+        }
+
+        .input-group .btn-add {
+            flex: 0 0 auto;
         }
 
         /* Player list */
@@ -280,7 +278,7 @@
         .player-name {
             flex: 1;
             font-weight: 600;
-            font-size: clamp(0.95rem, 3vw, 1rem);
+            font-size: 1rem;
         }
 
         .player-remove {
@@ -407,6 +405,17 @@
             line-height: 1.5;
             font-weight: 600;
             color: #eee;
+            margin-bottom: 16px;
+        }
+
+        .drink-option {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px dashed rgba(255, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 10px 16px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #ff6666;
         }
 
         /* Player pills in game */
@@ -508,19 +517,6 @@
             border-radius: 2px;
         }
 
-        /* Spacing utilities */
-        .mt-2 {
-            margin-top: 8px;
-        }
-
-        .mt-4 {
-            margin-top: 16px;
-        }
-
-        .mb-4 {
-            margin-bottom: 16px;
-        }
-
         .text-center {
             text-align: center;
         }
@@ -532,8 +528,8 @@
         <!-- Floating decorations -->
         <div class="floating-skull" style="left: 8%; animation-delay: 0s;">💀</div>
         <div class="floating-skull" style="left: 25%; animation-delay: 5s;">🔥</div>
-        <div class="floating-skull" style="left: 50%; animation-delay: 10s;">☠️</div>
-        <div class="floating-skull" style="left: 75%; animation-delay: 15s;">🍺</div>
+        <div class="floating-skull" style="left: 50%; animation-delay: 10s;">🍺</div>
+        <div class="floating-skull" style="left: 75%; animation-delay: 15s;">🎉</div>
         <div class="floating-skull" style="left: 92%; animation-delay: 20s;">💀</div>
 
         <div class="main-container">
@@ -551,7 +547,7 @@
                             <span class="warning-text">⚠️ SOLO PARA MAYORES DE 18 ⚠️</span>
                         </div>
 
-                        <button @click="startGame" class="btn btn-primary">
+                        <button @click="startGame" class="btn btn-primary btn-full">
                             🎮 JUGAR
                         </button>
 
@@ -570,7 +566,7 @@
                         <div class="input-group">
                             <input v-model="newPlayerName" type="text" placeholder="Nombre del jugador..." class="input"
                                 maxlength="15" @keyup.enter="addPlayer">
-                            <button @click="addPlayer" class="btn btn-primary btn-small"
+                            <button @click="addPlayer" class="btn btn-primary btn-add"
                                 :disabled="!newPlayerName.trim()">
                                 ➕
                             </button>
@@ -589,7 +585,8 @@
                             </div>
                         </div>
 
-                        <button @click="startGameWithPlayers" class="btn btn-primary" :disabled="players.length < 2">
+                        <button @click="startGameWithPlayers" class="btn btn-primary btn-full"
+                            :disabled="players.length < 2">
                             🔥 EMPEZAR ({{ players.length }} jugadores)
                         </button>
                     </div>
@@ -614,7 +611,11 @@
                             {{ getCategoryEmoji(currentChallengeData?.category) }}
                             {{ currentChallengeData?.category || 'Desafío' }}
                         </span>
-                        <p class="challenge-text">{{ currentChallenge }}</p>
+                        <p class="challenge-text">{{ currentChallengeData?.text }}</p>
+                        <div class="drink-option">
+                            🍺 O bebe {{ currentChallengeData?.drinks }} trago{{ currentChallengeData?.drinks > 1 ? 's'
+                            : '' }}
+                        </div>
                     </div>
 
                     <div class="card">
@@ -626,7 +627,7 @@
                         </div>
                     </div>
 
-                    <button @click="nextTurn" class="btn btn-primary">
+                    <button @click="nextTurn" class="btn btn-primary btn-full">
                         ⏭️ SIGUIENTE TURNO
                     </button>
 
@@ -641,96 +642,118 @@
         const { createApp, ref } = Vue;
 
         // ============================================================
-        // 🔥🔥🔥 DESAFÍOS BESTIAS - SIN CENSURA 🔥🔥🔥
+        // 🔥 DESAFÍOS - FIESTAS, BURRADAS Y MOMENTOS ÉPICOS 🔥
+        // Cada desafío tiene: category, text, drinks (proporcional)
         // ============================================================
         const challenges = [
-            // YO NUNCA - Lo peor que has hecho
-            { category: "Yo Nunca", text: "Yo nunca... me he follado a alguien que no me atraía solo por despecho 💔" },
-            { category: "Yo Nunca", text: "Yo nunca... he fingido un orgasmo (si lo has hecho, 3 tragos y di con quién) 🎭" },
-            { category: "Yo Nunca", text: "Yo nunca... me he liado con el/la ex de un amigo/a 👀" },
-            { category: "Yo Nunca", text: "Yo nunca... he mandado nudes a la persona equivocada 📱💀" },
-            { category: "Yo Nunca", text: "Yo nunca... he vomitado encima de alguien mientras follaba 🤮" },
-            { category: "Yo Nunca", text: "Yo nunca... he tenido un trío (si sí, cuéntalo o 5 tragos) 🔥" },
-            { category: "Yo Nunca", text: "Yo nunca... me he masturbado pensando en alguien de esta sala 🙈" },
-            { category: "Yo Nunca", text: "Yo nunca... he follado en casa de mis padres mientras estaban 🤫" },
-            { category: "Yo Nunca", text: "Yo nunca... me he despertado sin saber con quién estaba en la cama 😵" },
-            { category: "Yo Nunca", text: "Yo nunca... he hecho un polvo de una noche y me he ido sin decir nada 🏃" },
+            // ============ YO NUNCA - Anécdotas de fiesta ============
+            { category: "Yo Nunca", text: "Yo nunca... me he meado en la calle estando borracho/a 🚶", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... me he despertado sin saber cómo llegué a casa 🏠", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... he vomitado en un sitio público (bar, disco, taxi...) 🤮", drinks: 3 },
+            { category: "Yo Nunca", text: "Yo nunca... me he quedado dormido/a en un sitio random de fiesta 😴", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... he perdido el móvil, cartera o llaves de fiesta 📱", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... he hecho algo de lo que me arrepentí al día siguiente 😬", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... me han echado de un bar o discoteca 🚪", drinks: 3 },
+            { category: "Yo Nunca", text: "Yo nunca... he mezclado bebidas hasta morir (cubata + chupitos + vino...) 🍹", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... he llorado borracho/a por tonterías 😭", drinks: 1 },
+            { category: "Yo Nunca", text: "Yo nunca... he roto algo en una fiesta (vasos, muebles, puertas...) 💥", drinks: 3 },
+            { category: "Yo Nunca", text: "Yo nunca... me he liado con alguien que no debía 💋", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... he hecho un calvo/mooning en público 🍑", drinks: 4 },
+            { category: "Yo Nunca", text: "Yo nunca... he llamado a alguien borracho/a y dicho algo vergonzoso 📞", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... he subido algo a redes borracho/a que tuve que borrar 📱", drinks: 2 },
+            { category: "Yo Nunca", text: "Yo nunca... me he bañado en una fuente o piscina de madrugada 🏊", drinks: 3 },
 
-            // VERDAD - Confesiones brutales
-            { category: "Verdad", text: "¿Cuál es tu fantasía sexual más turbia? Confiesa o bebe 5 tragos 🔞" },
-            { category: "Verdad", text: "¿Con quién de esta sala follarías si no hubiera consecuencias? DI EL NOMBRE 😈" },
-            { category: "Verdad", text: "¿Cuántas personas de aquí te has imaginado desnudas? Di el número 👀" },
-            { category: "Verdad", text: "Lee el último mensaje sexual que enviaste o recibiste 📱🔥" },
-            { category: "Verdad", text: "¿Cuál fue tu peor polvo y por qué? Detalles o 4 tragos 💀" },
-            { category: "Verdad", text: "¿Has llorado después de follar? ¿Por qué? 😢" },
-            { category: "Verdad", text: "¿Qué es lo más ilegal que has hecho? Cuenta la historia completa 🚨" },
-            { category: "Verdad", text: "¿Dónde es el sitio más raro donde has follado? 📍" },
-            { category: "Verdad", text: "Confiesa tu fetiche más raro. Sin mentir. 🎭" },
-            { category: "Verdad", text: "¿Alguna vez has tenido sentimientos por alguien aquí? ¿Quién? 💘" },
+            // ============ CUENTA - Anécdotas épicas ============
+            { category: "Cuenta", text: "Cuenta tu PEOR resaca de la historia. Con detalles 🤕", drinks: 3 },
+            { category: "Cuenta", text: "Cuenta algo vergonzoso que hayas hecho en una fiesta 😳", drinks: 3 },
+            { category: "Cuenta", text: "Cuenta una pelea o discusión que hayas tenido de fiesta 👊", drinks: 4 },
+            { category: "Cuenta", text: "Cuenta tu momento más ÉPICO de una noche de fiesta 🏆", drinks: 2 },
+            { category: "Cuenta", text: "Cuenta la anécdota más loca que tengas con alguien de aquí 🎭", drinks: 3 },
+            { category: "Cuenta", text: "Cuenta algo ilegal que hayas hecho (sin dar muchos detalles) 🚨", drinks: 5 },
+            { category: "Cuenta", text: "Cuenta tu ligoteo más patético 💔", drinks: 2 },
+            { category: "Cuenta", text: "Cuenta la mayor mentira que hayas dicho para escaparte de algo 🤥", drinks: 3 },
+            { category: "Cuenta", text: "Cuenta algo que hiciste borracho/a que NO recuerdas pero te contaron 🧠", drinks: 3 },
+            { category: "Cuenta", text: "Cuenta tu momento más ridículo intentando ligar 🙃", drinks: 2 },
 
-            // RETO - Los más bestias
-            { category: "Reto", text: "Manda un audio a tu crush diciendo 'Estoy pensando en ti' con voz sexy 📲🔥" },
-            { category: "Reto", text: "Quítate una prenda de ropa. Si solo te queda ropa interior, bebe 5 tragos 👙" },
-            { category: "Reto", text: "Dale un beso de 10 segundos a quien elija el grupo 💋" },
-            { category: "Reto", text: "Siéntate en el regazo de otro jugador hasta el siguiente turno 🦵" },
-            { category: "Reto", text: "Deja que alguien te haga un chupetón donde quiera (o 6 tragos) 💜" },
-            { category: "Reto", text: "Gime de forma convincente durante 15 segundos mirando a alguien 😩" },
-            { category: "Reto", text: "Llama a tu ex y dile que le echas de menos EN ALTAVOZ 📞💀" },
-            { category: "Reto", text: "Haz tu mejor cara de orgasmo. El grupo vota si es creíble 🎭" },
-            { category: "Reto", text: "Lame el cuello a la persona de tu derecha (o CHUPA del vaso de todos) 👅" },
-            { category: "Reto", text: "Manda un mensaje a tu último match diciendo 'Tengo ganas de verte' 📱" },
-            { category: "Reto", text: "Baila en el regazo de otra persona durante 30 segundos 💃" },
-            { category: "Reto", text: "Deja que el grupo elija tu estado de WhatsApp por 24h 📱" },
+            // ============ RETO - Burradas para hacer ahora ============
+            { category: "Reto", text: "Imita a otro jugador hasta que adivinen quién es 🎭", drinks: 2 },
+            { category: "Reto", text: "Llama a tu último contacto y dile 'Te echo de menos' 📞", drinks: 4 },
+            { category: "Reto", text: "Haz 10 flexiones ahora mismo 💪", drinks: 3 },
+            { category: "Reto", text: "Grita algo random por la ventana/balcón 📢", drinks: 4 },
+            { category: "Reto", text: "Deja que el grupo escriba un mensaje desde tu móvil 📱", drinks: 5 },
+            { category: "Reto", text: "Cuenta un chiste. Si nadie se ríe, bebe el doble 😂", drinks: 2 },
+            { category: "Reto", text: "Imita a un famoso durante 30 segundos 🌟", drinks: 2 },
+            { category: "Reto", text: "Baila sin música durante 20 segundos 💃", drinks: 2 },
+            { category: "Reto", text: "Di algo bonito a cada jugador. Tiene que ser sincero 💖", drinks: 3 },
+            { category: "Reto", text: "Mantén una conversación solo con palabras en inglés durante 1 minuto 🇬🇧", drinks: 2 },
+            { category: "Reto", text: "Deja que alguien te haga una foto fea y súbela a tu estado 📸", drinks: 4 },
+            { category: "Reto", text: "Habla con acento de otra región/país hasta tu siguiente turno 🗣️", drinks: 2 },
+            { category: "Reto", text: "Come algo raro que elija el grupo (salsa picante, limón a bocados...) 🌶️", drinks: 4 },
+            { category: "Reto", text: "Haz tu mejor imitación de un animal. El grupo vota si vale 🐔", drinks: 2 },
+            { category: "Reto", text: "Deja que el grupo cambie tu foto de perfil de WhatsApp por 24h 📱", drinks: 5 },
 
-            // CASTIGO - Todos beben
-            { category: "Castigo", text: "¡FONDO FONDO FONDO! El que no termine su bebida hace un reto extra 🍺⚡" },
-            { category: "Castigo", text: "Todos los que hayan follado este mes, beben. Los que no, beben el doble 🔥" },
-            { category: "Castigo", text: "Todos beben mientras el jugador actual cuenta hasta 10 muy lento 🐢" },
-            { category: "Castigo", text: "El último en tocar el suelo vacía su vaso 👇⚡" },
-            { category: "Castigo", text: "El que tenga el móvil más cerca lo pierde 5 minutos. Si mira, vacía vaso 📵" },
+            // ============ VOTACIÓN - El grupo decide ============
+            { category: "Votación", text: "El grupo vota: ¿quién es el/la que más lía de aquí? Esa persona bebe 🔥", drinks: 3 },
+            { category: "Votación", text: "El grupo vota: ¿quién sería el peor conductor borracho? Bebe 🚗", drinks: 3 },
+            { category: "Votación", text: "El grupo vota: ¿quién se pondría más pesado en una isla desierta? 🏝️", drinks: 3 },
+            { category: "Votación", text: "El grupo vota: ¿quién tiene las peores resacas? Bebe preventivo 🤕", drinks: 2 },
+            { category: "Votación", text: "El grupo vota: ¿quién es más probable que acabe en la cárcel? Bebe 🚔", drinks: 4 },
+            { category: "Votación", text: "El grupo vota: ¿quién miente más? Esa persona defiende su honor o bebe 🤥", drinks: 3 },
+            { category: "Votación", text: "El grupo vota: ¿quién es el/la más dramático/a? 👑", drinks: 2 },
+            { category: "Votación", text: "El grupo vota: ¿quién tiene el peor gusto en música? 🎵", drinks: 2 },
+            { category: "Votación", text: "El grupo vota: ¿a quién le confiarías menos un secreto? 🤫", drinks: 3 },
+            { category: "Votación", text: "El grupo vota: ¿quién ligaría peor si estuviera solo/a? 💔", drinks: 2 },
 
-            // BOMBA - Lo más heavy
-            { category: "Bomba", text: "BOMBA: Rankea a todos los jugadores del más al menos atractivo. EN VOZ ALTA 💣" },
-            { category: "Bomba", text: "BOMBA: Di algo que nunca le dirías a alguien aquí... Y DÍSELO AHORA 💣" },
-            { category: "Bomba", text: "BOMBA: Confiesa quién te gustaría que te besara ahora mismo 💣💋" },
-            { category: "Bomba", text: "BOMBA: Cuenta tu secreto más vergonzoso o vacía tu vaso de golpe 💣" },
-            { category: "Bomba", text: "BOMBA: ¿De quién aquí tienes más celos? Di el nombre y por qué 💣" },
-            { category: "Bomba", text: "BOMBA: Describe cómo crees que folla cada persona del grupo 💣🔥" },
+            // ============ TODOS BEBEN - Momentos épicos ============
+            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN VOMITADO EN EL ÚLTIMO AÑO! 🤮", drinks: 2 },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE TENGAN RESACA AHORA MISMO! 🤕", drinks: 2 },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN LLEGADO TARDE HOY! ⏰", drinks: 2 },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE LLEVEN ALGO NEGRO! 🖤", drinks: 1 },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE HAYAN DICHO UNA MENTIRA HOY! 🤥", drinks: 2 },
+            { category: "Todos Beben", text: "¡EL ÚLTIMO QUE MIRÓ EL MÓVIL! 📱", drinks: 2 },
+            { category: "Todos Beben", text: "¡TODOS LOS QUE NO HAYAN DORMIDO MÁS DE 6 HORAS! 😴", drinks: 2 },
+            { category: "Todos Beben", text: "¡BRINDIS! TODOS BEBEN POR EL QUE ELIGIÓ ESTE JUEGO! 🍻", drinks: 1 },
+            { category: "Todos Beben", text: "¡CASCADA! Todos beben en orden, solo paras cuando pare el de tu izquierda 🌊", drinks: 3 },
+            { category: "Todos Beben", text: "¡RONDA GENERAL! Todo el mundo bebe sin excusas 🍺", drinks: 2 },
 
-            // REGLA NUEVA - Jode a todos
-            { category: "Nueva Regla", text: "NUEVA REGLA: Nadie puede decir 'no' hasta el siguiente turno. El que lo diga, bebe 🚫" },
-            { category: "Nueva Regla", text: "NUEVA REGLA: Cada vez que alguien beba, tiene que gemir 😩🍺" },
-            { category: "Nueva Regla", text: "NUEVA REGLA: Hay que llamarse por motes sexuales. Inventadlos AHORA 💋" },
-            { category: "Nueva Regla", text: "NUEVA REGLA: Solo se puede hablar susurrando al oído 👂" },
-            { category: "Nueva Regla", text: "NUEVA REGLA: Antes de beber hay que decir algo que te ponga 🔥" },
+            // ============ ELIGE - Tienes el poder ============
+            { category: "Elige", text: "Elige a alguien para que cuente su peor anécdota de borrachera 🍺", drinks: 3 },
+            { category: "Elige", text: "Elige a alguien para hacerle 3 preguntas incómodas 🔍", drinks: 4 },
+            { category: "Elige", text: "Elige a 2 personas para un duelo de miradas. El que se ría primero bebe 👁️", drinks: 3 },
+            { category: "Elige", text: "Elige a alguien para que te imite. Si no aciertas quién es, bebes tú 🎭", drinks: 2 },
+            { category: "Elige", text: "Reparte 5 tragos entre los jugadores como quieras 🎯", drinks: 5 },
+            { category: "Elige", text: "Elige a alguien para piedra-papel-tijera. El perdedor bebe 3 ✂️", drinks: 3 },
+            { category: "Elige", text: "Elige a alguien para intercambiar bebidas por el resto de la partida 🔄", drinks: 2 },
+            { category: "Elige", text: "Elige quién tiene que contar la anécdota más vergonzosa de su vida 😳", drinks: 4 },
+            { category: "Elige", text: "Elige a alguien para que haga una llamada en altavoz 📞", drinks: 5 },
+            { category: "Elige", text: "Elige quién tiene que imitar a otro jugador hasta que adivinen quién es 🎭", drinks: 2 },
 
-            // ELIGE - El poder absoluto
-            { category: "Elige", text: "Elige a alguien para que se quite una prenda o beba 4 tragos 👆" },
-            { category: "Elige", text: "Elige a 2 personas: tienen que besarse o ambos beben 5 tragos 💋" },
-            { category: "Elige", text: "Elige a alguien para hacerle 3 preguntas. TIENE que responder con verdad 🔍" },
-            { category: "Elige", text: "Elige quién tiene que enviar un mensaje comprometedor a su ex 📱💀" },
-            { category: "Elige", text: "Elige a alguien para intercambiar una prenda de ropa contigo 👕" },
-            { category: "Elige", text: "Elige a alguien: tiene que hacer un striptease de 30 segundos o vaciar su vaso 🩲" },
+            // ============ DUELO - Cara a cara ============
+            { category: "Duelo", text: "DUELO: Piedra, papel, tijera al mejor de 3. El perdedor bebe ✂️", drinks: 3 },
+            { category: "Duelo", text: "DUELO: ¿Quién aguanta más sin reírse? Miraos fijamente 30 segundos 👁️", drinks: 3 },
+            { category: "Duelo", text: "DUELO: Competid a ver quién dice más capitales de Europa en 30 seg 🌍", drinks: 3 },
+            { category: "Duelo", text: "DUELO: A ver quién hace mejor imitación de un borracho 🥴", drinks: 2 },
+            { category: "Duelo", text: "DUELO: Pulso de pulgares. El perdedor bebe 💪", drinks: 2 },
+            { category: "Duelo", text: "DUELO: ¿Quién cuenta el chiste más malo? El grupo vota, el perdedor bebe 😂", drinks: 2 },
 
-            // CONFESIONARIO - Lo más oscuro
-            { category: "Confesionario", text: "Confiesa: ¿Has fantaseado con alguien del grupo? ¿Qué fantasía? 🔞" },
-            { category: "Confesionario", text: "Confiesa: ¿Cuál es la mentira más gorda que le has dicho a alguien aquí? 🤥" },
-            { category: "Confesionario", text: "Confiesa: ¿Qué es lo más sucio que has hecho estando borracho/a? 🥴" },
-            { category: "Confesionario", text: "Confiesa: ¿Alguna vez te has enamorado de alguien que no debías? ¿Quién? 💔" },
-            { category: "Confesionario", text: "Confiesa: ¿Qué es lo que más te avergüenza de tu vida sexual? 🙈" },
+            // ============ NUEVA REGLA - Hasta el siguiente turno ============
+            { category: "Nueva Regla", text: "REGLA: Nadie puede decir 'yo' hasta el siguiente turno. El que lo diga bebe 🙊", drinks: 1 },
+            { category: "Nueva Regla", text: "REGLA: Hay que brindar antes de cada trago o bebes el doble 🥂", drinks: 1 },
+            { category: "Nueva Regla", text: "REGLA: Solo se puede beber con la mano izquierda 🖐️", drinks: 1 },
+            { category: "Nueva Regla", text: "REGLA: Hay que hablar en tercera persona. El que falle, bebe 👤", drinks: 1 },
+            { category: "Nueva Regla", text: "REGLA: Todos tienen que añadir 'tío' al final de cada frase, tío 🗣️", drinks: 1 },
+            { category: "Nueva Regla", text: "REGLA: Prohibido señalar con el dedo. El que lo haga, bebe 👆", drinks: 1 },
+            { category: "Nueva Regla", text: "REGLA: Antes de beber hay que decir algo que te mole del de tu derecha 💖", drinks: 1 },
 
-            // DUELO - Cara a cara
-            { category: "Duelo", text: "DUELO: Elige a alguien. Miraos a los ojos 30 seg. El primero en reír bebe el doble 👁️" },
-            { category: "Duelo", text: "DUELO: Piedra, papel, tijera. El perdedor hace lo que diga el ganador 🎲" },
-            { category: "Duelo", text: "DUELO: Compite con alguien a ver quién dice el piropo más sucio 💋" },
-            { category: "Duelo", text: "DUELO: Ver quién aguanta más tiempo haciendo una plancha. El perdedor, 5 tragos 💪" },
-
-            // HUMILLACIÓN - Sin piedad
-            { category: "Humillación", text: "El grupo vota: ¿Quién aquí es el/la más fácil? Esa persona bebe 3 😈" },
-            { category: "Humillación", text: "Imita cómo crees que gime la persona de tu izquierda 🎭" },
-            { category: "Humillación", text: "El grupo decide tu pose para una foto que subirás a Instagram 📸" },
-            { category: "Humillación", text: "Cuenta tu rechazo más humillante. Con detalles 💀" },
-            { category: "Humillación", text: "Deja que alguien mande un mensaje desde tu móvil a quien quiera 📱⚠️" }
+            // ============ BOMBA - Lo más heavy ============
+            { category: "Bomba", text: "💣 BOMBA: Rankea a todos del más al menos gracioso. EN VOZ ALTA", drinks: 5 },
+            { category: "Bomba", text: "💣 BOMBA: Confiesa algo que nunca le dirías a nadie del grupo... Y DILO", drinks: 5 },
+            { category: "Bomba", text: "💣 BOMBA: Di qué es lo que más te molesta de cada persona aquí 😬", drinks: 6 },
+            { category: "Bomba", text: "💣 BOMBA: Cuenta tu mayor cagada de la vida. Algo GORDO", drinks: 5 },
+            { category: "Bomba", text: "💣 BOMBA: Di una verdad sobre ti que nadie aquí sepa", drinks: 4 },
+            { category: "Bomba", text: "💣 BOMBA: Imita a alguien del grupo exagerando sus defectos 🎭", drinks: 4 },
+            { category: "Bomba", text: "💣 BOMBA: Cuenta la peor pelea o discusión que hayas tenido 👊", drinks: 5 },
+            { category: "Bomba", text: "💣 BOMBA: Di qué cambiarías de cada persona del grupo 🔧", drinks: 5 }
         ];
 
         const app = createApp({
@@ -739,7 +762,6 @@
                 const players = ref([]);
                 const newPlayerName = ref('');
                 const currentTurn = ref(0);
-                const currentChallenge = ref('');
                 const currentPlayerName = ref('');
                 const currentChallengeData = ref(null);
                 const currentPlayerIndex = ref(0);
@@ -762,7 +784,6 @@
 
                 const pickRandomChallenge = () => {
                     const challenge = challenges[Math.floor(Math.random() * challenges.length)];
-                    currentChallenge.value = challenge.text;
                     currentChallengeData.value = challenge;
                 };
 
@@ -791,15 +812,14 @@
                 const getCategoryColor = (category) => {
                     const colors = {
                         'Yo Nunca': 'linear-gradient(135deg, #dc2626, #991b1b)',
-                        'Verdad': 'linear-gradient(135deg, #9333ea, #6b21a8)',
+                        'Cuenta': 'linear-gradient(135deg, #9333ea, #6b21a8)',
                         'Reto': 'linear-gradient(135deg, #ea580c, #c2410c)',
-                        'Castigo': 'linear-gradient(135deg, #0891b2, #0e7490)',
-                        'Bomba': 'linear-gradient(135deg, #18181b, #000000)',
-                        'Nueva Regla': 'linear-gradient(135deg, #ca8a04, #a16207)',
+                        'Votación': 'linear-gradient(135deg, #0891b2, #0e7490)',
+                        'Todos Beben': 'linear-gradient(135deg, #16a34a, #15803d)',
                         'Elige': 'linear-gradient(135deg, #db2777, #be185d)',
-                        'Confesionario': 'linear-gradient(135deg, #4f46e5, #3730a3)',
-                        'Duelo': 'linear-gradient(135deg, #059669, #047857)',
-                        'Humillación': 'linear-gradient(135deg, #dc2626, #450a0a)'
+                        'Duelo': 'linear-gradient(135deg, #d97706, #b45309)',
+                        'Nueva Regla': 'linear-gradient(135deg, #4f46e5, #3730a3)',
+                        'Bomba': 'linear-gradient(135deg, #18181b, #000000)'
                     };
                     return colors[category] || 'linear-gradient(135deg, #6b7280, #4b5563)';
                 };
@@ -807,15 +827,14 @@
                 const getCategoryEmoji = (category) => {
                     const emojis = {
                         'Yo Nunca': '🙅',
-                        'Verdad': '🔮',
+                        'Cuenta': '📖',
                         'Reto': '🎯',
-                        'Castigo': '⚡',
-                        'Bomba': '💣',
-                        'Nueva Regla': '📜',
+                        'Votación': '🗳️',
+                        'Todos Beben': '🍻',
                         'Elige': '👆',
-                        'Confesionario': '🕯️',
                         'Duelo': '⚔️',
-                        'Humillación': '😈'
+                        'Nueva Regla': '📜',
+                        'Bomba': '💣'
                     };
                     return emojis[category] || '🔥';
                 };
@@ -825,7 +844,6 @@
                     players,
                     newPlayerName,
                     currentTurn,
-                    currentChallenge,
                     currentPlayerName,
                     currentChallengeData,
                     startGame,
