@@ -4,277 +4,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🍻 Previas - Juego de Beber</title>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>🔥 PREVIAS - El Juego Más Bestia 🔥</title>
 
     <!-- Vue 3 CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <script>
-        // Configure Tailwind
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'neon-pink': '#ff2d75',
-                        'neon-cyan': '#00f5ff',
-                        'neon-purple': '#7c3aed',
-                        'dark-bg': '#0f0f1a',
-                        'card-bg': '#1a1a2e',
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap');
+
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: #0f0f1a;
-            min-height: 100vh;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            overflow-x: hidden;
             margin: 0;
             padding: 0;
         }
 
-        /* Animated gradient background */
-        .animated-bg {
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            color: white;
         }
 
-        @keyframes gradientShift {
-
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
+        /* Animated blood drip background */
+        .bg-hellfire {
+            background:
+                radial-gradient(ellipse at top, #1a0000 0%, #0a0a0a 50%),
+                radial-gradient(ellipse at bottom, #0a0a0a 0%, #000000 100%);
+            background-size: 100% 100%;
+            position: relative;
         }
 
-        /* Neon glow effects */
-        .neon-pink-glow {
-            box-shadow: 0 0 20px rgba(255, 45, 117, 0.5),
-                0 0 40px rgba(255, 45, 117, 0.3),
-                0 0 60px rgba(255, 45, 117, 0.1);
+        .bg-hellfire::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(90deg,
+                    transparent 0px,
+                    transparent 100px,
+                    rgba(255, 0, 0, 0.03) 100px,
+                    rgba(255, 0, 0, 0.03) 101px);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .neon-cyan-glow {
-            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5),
-                0 0 40px rgba(0, 245, 255, 0.3),
-                0 0 60px rgba(0, 245, 255, 0.1);
+        /* Fire glow effects */
+        .glow-fire {
+            box-shadow:
+                0 0 20px rgba(255, 0, 0, 0.6),
+                0 0 40px rgba(255, 0, 0, 0.4),
+                0 0 60px rgba(255, 0, 0, 0.2),
+                inset 0 0 20px rgba(255, 0, 0, 0.1);
         }
 
-        .neon-purple-glow {
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5),
-                0 0 40px rgba(124, 58, 237, 0.3),
-                0 0 60px rgba(124, 58, 237, 0.1);
+        .glow-fire-intense {
+            box-shadow:
+                0 0 30px rgba(255, 0, 0, 0.8),
+                0 0 60px rgba(255, 0, 0, 0.5),
+                0 0 90px rgba(255, 0, 0, 0.3);
         }
 
         /* Glowing text */
-        .glow-text {
-            text-shadow: 0 0 10px rgba(255, 45, 117, 0.8),
-                0 0 20px rgba(255, 45, 117, 0.6),
-                0 0 30px rgba(255, 45, 117, 0.4);
+        .text-fire {
+            background: linear-gradient(135deg, #ff0000 0%, #ff4444 50%, #ff0000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.8));
         }
 
-        .glow-text-cyan {
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.8),
-                0 0 20px rgba(0, 245, 255, 0.6),
-                0 0 30px rgba(0, 245, 255, 0.4);
+        .text-glow {
+            text-shadow:
+                0 0 10px rgba(255, 0, 0, 0.9),
+                0 0 20px rgba(255, 0, 0, 0.7),
+                0 0 40px rgba(255, 0, 0, 0.5),
+                0 0 80px rgba(255, 0, 0, 0.3);
         }
 
-        /* Button styles */
-        .btn-neon {
+        /* Main title */
+        .title-brutal {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            letter-spacing: 8px;
+            animation: pulse-fire 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-fire {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.8));
+                transform: scale(1);
+            }
+
+            50% {
+                filter: drop-shadow(0 0 40px rgba(255, 0, 0, 1));
+                transform: scale(1.02);
+            }
+        }
+
+        /* Buttons */
+        .btn-brutal {
             position: relative;
-            padding: 18px 36px;
-            border-radius: 16px;
-            font-weight: 700;
-            font-size: 1.1rem;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1.2rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
+            letter-spacing: 2px;
             cursor: pointer;
-            border: none;
-            min-height: 60px;
+            border: 2px solid;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .btn-pink {
-            background: linear-gradient(135deg, #ff2d75 0%, #ff6b9d 100%);
+        .btn-brutal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-brutal:hover::before {
+            left: 100%;
+        }
+
+        .btn-fire {
+            background: linear-gradient(135deg, #cc0000 0%, #ff0000 50%, #cc0000 100%);
+            border-color: #ff0000;
             color: white;
         }
 
-        .btn-pink:hover,
-        .btn-pink:active {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(255, 45, 117, 0.7),
-                0 0 60px rgba(255, 45, 117, 0.4);
+        .btn-fire:hover,
+        .btn-fire:active {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow:
+                0 10px 30px rgba(255, 0, 0, 0.6),
+                0 0 60px rgba(255, 0, 0, 0.4);
         }
 
-        .btn-cyan {
-            background: linear-gradient(135deg, #00f5ff 0%, #00c4cc 100%);
-            color: #0f0f1a;
+        .btn-dark {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+            border-color: #ff0000;
+            color: #ff0000;
         }
 
-        .btn-cyan:hover,
-        .btn-cyan:active {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(0, 245, 255, 0.7),
-                0 0 60px rgba(0, 245, 255, 0.4);
+        .btn-dark:hover,
+        .btn-dark:active {
+            background: linear-gradient(135deg, #2a0000 0%, #3a0000 50%, #2a0000 100%);
+            transform: scale(1.03);
         }
 
-        .btn-purple {
-            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-            color: white;
-        }
-
-        .btn-purple:hover,
-        .btn-purple:active {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(124, 58, 237, 0.7),
-                0 0 60px rgba(124, 58, 237, 0.4);
-        }
-
-        .btn-neon:disabled {
-            opacity: 0.5;
+        .btn-brutal:disabled {
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none !important;
-            box-shadow: none !important;
         }
 
-        /* Card styles */
-        .card {
-            background: rgba(26, 26, 46, 0.95);
+        /* Cards */
+        .card-brutal {
+            background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 28px;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Input styles */
-        .input-neon {
-            background: rgba(15, 15, 26, 0.9);
-            border: 2px solid rgba(0, 245, 255, 0.3);
-            border-radius: 16px;
+        .card-brutal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+        }
+
+        /* Input */
+        .input-brutal {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 0, 0, 0.4);
+            border-radius: 12px;
             padding: 18px;
             color: white;
             font-size: 1.1rem;
             width: 100%;
             transition: all 0.3s ease;
-            min-height: 60px;
+            font-weight: 600;
         }
 
-        .input-neon:focus {
+        .input-brutal:focus {
             outline: none;
-            border-color: #00f5ff;
-            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+            border-color: #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
         }
 
-        .input-neon::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+        .input-brutal::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Player list */
+        /* Player items */
         .player-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 12px;
             padding: 14px 18px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 14px;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+        }
+
+        .player-item:hover {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: rgba(255, 0, 0, 0.5);
         }
 
         .player-item.active {
-            background: rgba(255, 45, 117, 0.2);
-            border-color: rgba(255, 45, 117, 0.5);
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
         }
 
         .player-avatar {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
+            background: linear-gradient(135deg, #ff0000, #990000);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: white;
+            border: 2px solid #ff0000;
         }
 
-        /* Challenge card animation */
+        /* Challenge card */
         .challenge-card {
-            animation: slideIn 0.5s ease-out;
+            animation: slide-brutal 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes slideIn {
+        @keyframes slide-brutal {
             from {
                 opacity: 0;
-                transform: translateY(30px) scale(0.95);
+                transform: translateY(50px) scale(0.9) rotateX(10deg);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0) scale(1) rotateX(0);
             }
         }
 
-        /* Pulse animation */
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
+        /* Category badge */
+        .category-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Floating emojis */
-        .floating-emoji {
+        .floating-skull {
             position: fixed;
             font-size: 2rem;
-            animation: float 25s infinite linear;
-            opacity: 0.2;
+            opacity: 0.1;
             pointer-events: none;
+            animation: float-skull 20s linear infinite;
             z-index: 0;
         }
 
-        @keyframes float {
+        @keyframes float-skull {
             0% {
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
 
             10% {
-                opacity: 0.2;
+                opacity: 0.1;
             }
 
             90% {
-                opacity: 0.2;
+                opacity: 0.1;
             }
 
             100% {
@@ -283,39 +316,67 @@
             }
         }
 
-        /* Room code display */
-        .room-code {
-            font-family: 'Courier New', monospace;
-            font-size: 3rem;
-            font-weight: bold;
-            letter-spacing: 10px;
-            background: linear-gradient(135deg, #ff2d75, #00f5ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        /* Shake animation for intense moments */
+        .shake {
+            animation: shake 0.5s ease-in-out;
         }
 
-        /* Category badges */
-        .category-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 24px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: white;
-        }
+        @keyframes shake {
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            .room-code {
-                font-size: 2.5rem;
-                letter-spacing: 8px;
+            0%,
+            100% {
+                transform: translateX(0);
             }
 
-            .card {
-                padding: 20px;
+            20% {
+                transform: translateX(-10px) rotate(-1deg);
+            }
+
+            40% {
+                transform: translateX(10px) rotate(1deg);
+            }
+
+            60% {
+                transform: translateX(-10px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translateX(10px) rotate(1deg);
+            }
+        }
+
+        /* Player pills in game */
+        .player-pill {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .player-pill.active {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            border-color: #ff0000;
+            animation: pulse-active 1.5s ease-in-out infinite;
+        }
+
+        .player-pill.inactive {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+            border-color: rgba(255, 0, 0, 0.2);
+        }
+
+        @keyframes pulse-active {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+
+            50% {
+                box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.4);
             }
         }
 
@@ -325,42 +386,77 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: #0a0a0a;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 45, 117, 0.5);
+            background: #ff0000;
             border-radius: 3px;
         }
 
-        /* Mode indicator */
-        .mode-badge {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            padding: 8px 16px;
+        /* Responsive */
+        @media (max-width: 640px) {
+            .title-brutal {
+                font-size: 3.5rem;
+                letter-spacing: 4px;
+            }
+
+            .card-brutal {
+                padding: 20px;
+            }
+
+            .btn-brutal {
+                padding: 16px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Warning banner */
+        .warning-banner {
+            background: repeating-linear-gradient(45deg,
+                    #000,
+                    #000 10px,
+                    #ff0000 10px,
+                    #ff0000 20px);
+            padding: 3px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .warning-banner-inner {
+            background: #0a0a0a;
+            border-radius: 8px;
+            padding: 10px 15px;
+            text-align: center;
+            font-weight: 700;
+            color: #ff0000;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        /* Turn counter */
+        .turn-counter {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.4);
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            z-index: 100;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ff4444;
         }
     </style>
 </head>
 
-<body class="animated-bg min-h-screen">
+<body class="bg-hellfire min-h-screen">
     <div id="app" class="min-h-screen">
-        <!-- Floating background emojis -->
-        <div class="floating-emoji" style="left: 5%; animation-delay: 0s;">🍺</div>
-        <div class="floating-emoji" style="left: 25%; animation-delay: 5s;">🎉</div>
-        <div class="floating-emoji" style="left: 45%; animation-delay: 10s;">🍻</div>
-        <div class="floating-emoji" style="left: 65%; animation-delay: 15s;">🥳</div>
-        <div class="floating-emoji" style="left: 85%; animation-delay: 20s;">🎊</div>
-
-        <!-- Mode indicator -->
-        <div class="mode-badge"
-            :class="isOnlineMode ? 'bg-green-500/20 text-green-400 border border-green-500/50' : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50'">
-            {{ isOnlineMode ? '🌐 Online' : '📱 Local' }}
-        </div>
+        <!-- Floating skulls background -->
+        <div class="floating-skull" style="left: 5%; animation-delay: 0s;">💀</div>
+        <div class="floating-skull" style="left: 20%; animation-delay: 4s;">🔥</div>
+        <div class="floating-skull" style="left: 35%; animation-delay: 8s;">☠️</div>
+        <div class="floating-skull" style="left: 50%; animation-delay: 12s;">🍺</div>
+        <div class="floating-skull" style="left: 65%; animation-delay: 16s;">💀</div>
+        <div class="floating-skull" style="left: 80%; animation-delay: 3s;">🔥</div>
+        <div class="floating-skull" style="left: 95%; animation-delay: 7s;">☠️</div>
 
         <!-- Main Container -->
         <div class="min-h-screen flex flex-col items-center justify-center p-5 relative z-10">
@@ -368,212 +464,96 @@
             <!-- ==================== START SCREEN ==================== -->
             <div v-if="screen === 'start'" class="w-full max-w-md">
                 <div class="text-center mb-10">
-                    <h1 class="text-6xl font-bold text-white glow-text mb-3">🍻</h1>
-                    <h2 class="text-4xl font-bold text-white glow-text mb-2">PREVIAS</h2>
-                    <p class="text-gray-400 text-lg">El juego de beber definitivo</p>
+                    <h1 class="title-brutal text-fire">🔥 PREVIAS 🔥</h1>
+                    <p class="text-gray-500 text-lg mt-2 uppercase tracking-widest">El juego más bestia</p>
                 </div>
 
-                <div class="card space-y-5">
-                    <!-- Local Game (works without Firebase) -->
-                    <button @click="startLocalGame" class="btn-neon btn-pink w-full">
-                        🎮 Juego Local
-                    </button>
-
-                    <div class="flex items-center gap-4 my-4">
-                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
-                        <span class="text-gray-500 text-sm">multijugador online</span>
-                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+                <div class="card-brutal">
+                    <div class="warning-banner">
+                        <div class="warning-banner-inner">
+                            ⚠️ SOLO PARA MAYORES DE 18 ⚠️
+                        </div>
                     </div>
 
-                    <!-- Online Mode -->
-                    <button @click="createRoom" class="btn-neon btn-purple w-full" :disabled="!firebaseReady">
-                        🎲 Crear Sala Online
+                    <button @click="startGame" class="btn-brutal btn-fire w-full">
+                        🎮 JUGAR
                     </button>
 
-                    <div class="space-y-4">
-                        <input v-model="roomCodeInput" type="text" placeholder="Código de sala (4 letras)"
-                            class="input-neon text-center uppercase" maxlength="4"
-                            style="letter-spacing: 8px; font-weight: bold;">
-                        <button @click="screen = 'join'" class="btn-neon btn-cyan w-full"
-                            :disabled="roomCodeInput.length !== 4 || !firebaseReady">
-                            🚀 Unirse a Sala
-                        </button>
-                    </div>
-
-                    <p v-if="!firebaseReady" class="text-yellow-400 text-sm text-center mt-2">
-                        ⚠️ Firebase no configurado. Usa "Juego Local" o configura Firebase.
+                    <p class="text-center text-gray-600 text-sm mt-4">
+                        Añade jugadores y prepárate para lo peor
                     </p>
                 </div>
-
-                <p v-if="errorMessage" class="text-red-400 text-center mt-4 animate-pulse">
-                    {{ errorMessage }}
-                </p>
             </div>
 
-            <!-- ==================== ADD PLAYERS SCREEN (LOCAL MODE) ==================== -->
+            <!-- ==================== ADD PLAYERS SCREEN ==================== -->
             <div v-if="screen === 'addPlayers'" class="w-full max-w-md">
                 <div class="text-center mb-6">
-                    <h1 class="text-3xl font-bold text-white glow-text mb-2">👥 Añadir Jugadores</h1>
-                    <p class="text-gray-400">Mínimo 2 jugadores para empezar</p>
+                    <h1 class="text-3xl font-black text-fire text-glow mb-2">👥 VÍCTIMAS</h1>
+                    <p class="text-gray-500">Mínimo 2 valientes para empezar</p>
                 </div>
 
-                <div class="card">
+                <div class="card-brutal">
                     <!-- Add player form -->
                     <div class="flex gap-3 mb-6">
                         <input v-model="newPlayerName" type="text" placeholder="Nombre del jugador..."
-                            class="input-neon flex-1" maxlength="15" @keyup.enter="addLocalPlayer">
-                        <button @click="addLocalPlayer" class="btn-neon btn-cyan" :disabled="!newPlayerName.trim()"
-                            style="min-width: 60px;">
+                            class="input-brutal flex-1" maxlength="15" @keyup.enter="addPlayer">
+                        <button @click="addPlayer" class="btn-brutal btn-fire" :disabled="!newPlayerName.trim()"
+                            style="min-width: 60px; padding: 15px;">
                             ➕
                         </button>
                     </div>
 
                     <!-- Player list -->
                     <div class="space-y-2 mb-6 max-h-60 overflow-y-auto">
-                        <div v-for="(player, index) in localPlayers" :key="index" class="player-item">
-                            <div class="player-avatar bg-gradient-to-br from-pink-500 to-purple-600">
+                        <div v-for="(player, index) in players" :key="index" class="player-item">
+                            <div class="player-avatar">
                                 {{ player.charAt(0).toUpperCase() }}
                             </div>
-                            <span class="text-white font-medium flex-1">{{ player }}</span>
-                            <button @click="removeLocalPlayer(index)"
-                                class="text-red-400 hover:text-red-300 text-xl px-2">
+                            <span class="text-white font-semibold flex-1">{{ player }}</span>
+                            <button @click="removePlayer(index)"
+                                class="text-red-500 hover:text-red-400 text-xl px-2 font-bold">
                                 ✕
                             </button>
                         </div>
 
-                        <div v-if="localPlayers.length === 0" class="text-center text-gray-500 py-8">
-                            <p class="text-4xl mb-2">🎭</p>
-                            <p>Añade jugadores para empezar</p>
+                        <div v-if="players.length === 0" class="text-center text-gray-600 py-8">
+                            <p class="text-4xl mb-2">💀</p>
+                            <p>¿Nadie tiene huevos?</p>
                         </div>
                     </div>
 
                     <!-- Start button -->
-                    <button @click="startLocalGameWithPlayers" class="btn-neon btn-pink w-full"
-                        :disabled="localPlayers.length < 2">
-                        🎮 Empezar Partida ({{ localPlayers.length }} jugadores)
+                    <button @click="startGameWithPlayers" class="btn-brutal btn-fire w-full"
+                        :disabled="players.length < 2">
+                        🔥 EMPEZAR ({{ players.length }} jugadores)
                     </button>
                 </div>
 
                 <button @click="screen = 'start'"
-                    class="text-gray-500 hover:text-white transition-colors w-full py-4 mt-2 text-center">
+                    class="text-gray-600 hover:text-red-500 transition-colors w-full py-4 mt-2 text-center font-semibold">
                     ← Volver
-                </button>
-            </div>
-
-            <!-- ==================== NAME INPUT FOR ONLINE ==================== -->
-            <div v-if="screen === 'name'" class="w-full max-w-md">
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-white glow-text mb-2">👋 ¿Cómo te llamas?</h1>
-                </div>
-
-                <div class="card space-y-5">
-                    <input v-model="playerName" type="text" placeholder="Tu nombre..."
-                        class="input-neon text-center text-xl" maxlength="15">
-                    <button @click="confirmCreateRoom" class="btn-neon btn-pink w-full" :disabled="!playerName.trim()">
-                        ✨ Crear Sala
-                    </button>
-                    <button @click="screen = 'start'"
-                        class="text-gray-400 hover:text-white transition-colors w-full py-2 text-center">
-                        ← Volver
-                    </button>
-                </div>
-            </div>
-
-            <!-- ==================== JOIN ROOM ==================== -->
-            <div v-if="screen === 'join'" class="w-full max-w-md">
-                <div class="text-center mb-8">
-                    <p class="text-gray-400 mb-2">Uniéndote a sala:</p>
-                    <p class="room-code">{{ roomCodeInput.toUpperCase() }}</p>
-                </div>
-
-                <div class="card space-y-5">
-                    <input v-model="playerName" type="text" placeholder="Tu nombre..."
-                        class="input-neon text-center text-xl" maxlength="15">
-                    <button @click="joinRoom" class="btn-neon btn-cyan w-full" :disabled="!playerName.trim()">
-                        🚀 Unirse
-                    </button>
-                    <button @click="screen = 'start'; roomCodeInput = ''"
-                        class="text-gray-400 hover:text-white transition-colors w-full py-2 text-center">
-                        ← Volver
-                    </button>
-                </div>
-
-                <p v-if="errorMessage" class="text-red-400 text-center mt-4 animate-pulse">
-                    {{ errorMessage }}
-                </p>
-            </div>
-
-            <!-- ==================== LOBBY SCREEN ==================== -->
-            <div v-if="screen === 'lobby'" class="w-full max-w-md">
-                <div class="text-center mb-6">
-                    <p class="text-gray-400 mb-2">Código de sala:</p>
-                    <p class="room-code">{{ roomCode }}</p>
-                    <button @click="copyRoomCode"
-                        class="text-cyan-400 text-sm mt-3 hover:text-cyan-300 transition-colors">
-                        📋 {{ copied ? '¡Copiado!' : 'Copiar código' }}
-                    </button>
-                </div>
-
-                <div class="card">
-                    <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                        <span class="text-2xl">👥</span>
-                        Jugadores ({{ Object.keys(players).length }})
-                    </h2>
-
-                    <div class="space-y-2 mb-6 max-h-60 overflow-y-auto">
-                        <div v-for="(player, id) in players" :key="id" class="player-item">
-                            <div class="player-avatar bg-gradient-to-br from-pink-500 to-purple-600">
-                                {{ player.name.charAt(0).toUpperCase() }}
-                            </div>
-                            <span class="text-white font-medium flex-1">{{ player.name }}</span>
-                            <span v-if="id === hostId" class="text-yellow-400 text-sm">👑</span>
-                        </div>
-
-                        <div v-if="Object.keys(players).length === 0" class="text-center text-gray-500 py-6">
-                            <p class="pulse">Esperando jugadores...</p>
-                        </div>
-                    </div>
-
-                    <!-- Host controls -->
-                    <div v-if="isHost">
-                        <button @click="startOnlineGame" class="btn-neon btn-purple w-full"
-                            :disabled="Object.keys(players).length < 2">
-                            🎮 Empezar Partida
-                        </button>
-                        <p v-if="Object.keys(players).length < 2" class="text-gray-500 text-sm text-center mt-3">
-                            Necesitas al menos 2 jugadores
-                        </p>
-                    </div>
-                    <div v-else class="text-center py-2">
-                        <p class="text-gray-400 pulse">⏳ Esperando que el host inicie...</p>
-                    </div>
-                </div>
-
-                <button @click="leaveRoom"
-                    class="text-gray-500 hover:text-red-400 transition-colors w-full py-4 mt-2 text-center">
-                    🚪 Abandonar Sala
                 </button>
             </div>
 
             <!-- ==================== GAME SCREEN ==================== -->
             <div v-if="screen === 'game'" class="w-full max-w-md">
                 <!-- Turn indicator -->
-                <div class="text-center mb-3">
-                    <span class="text-gray-500 text-sm bg-gray-800/50 px-4 py-1 rounded-full">
-                        Turno {{ currentTurn + 1 }}
+                <div class="text-center mb-4">
+                    <span class="turn-counter">
+                        RONDA {{ currentTurn + 1 }}
                     </span>
                 </div>
 
                 <!-- Current player -->
                 <div class="text-center mb-5">
-                    <p class="text-gray-400 mb-1 text-sm">Le toca a:</p>
-                    <p class="text-4xl font-bold text-white glow-text-cyan">
+                    <p class="text-gray-500 mb-1 text-sm uppercase tracking-wider">Le toca a:</p>
+                    <p class="text-4xl font-black text-fire text-glow">
                         {{ currentPlayerName }}
                     </p>
                 </div>
 
                 <!-- Challenge card -->
-                <div class="card challenge-card mb-5" :key="currentTurn">
+                <div class="card-brutal challenge-card mb-5 glow-fire" :key="currentTurn">
                     <div class="text-center">
                         <!-- Category badge -->
                         <span class="category-badge mb-4"
@@ -583,30 +563,29 @@
                         </span>
 
                         <!-- Challenge text -->
-                        <p class="text-2xl text-white font-medium mt-5 leading-relaxed px-2">
+                        <p class="text-2xl text-white font-bold mt-6 leading-relaxed px-2">
                             {{ currentChallenge }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Player list (compact) -->
-                <div class="card mb-5 py-4">
+                <div class="card-brutal mb-5 py-4">
                     <div class="flex flex-wrap gap-2 justify-center">
-                        <div v-for="(name, index) in gamePlayerNames" :key="index"
-                            class="px-4 py-2 rounded-full text-sm font-medium transition-all"
-                            :class="name === currentPlayerName ? 'bg-pink-500 text-white neon-pink-glow' : 'bg-gray-800 text-gray-400'">
+                        <div v-for="(name, index) in players" :key="index" class="player-pill"
+                            :class="name === currentPlayerName ? 'active' : 'inactive'">
                             {{ name }}
                         </div>
                     </div>
                 </div>
 
                 <!-- Next turn button -->
-                <button @click="nextTurn" class="btn-neon btn-pink w-full">
-                    ⏭️ Siguiente Turno
+                <button @click="nextTurn" class="btn-brutal btn-fire w-full">
+                    ⏭️ SIGUIENTE TURNO
                 </button>
 
                 <button @click="endGame"
-                    class="text-gray-500 hover:text-red-400 transition-colors w-full py-4 mt-2 text-center">
+                    class="text-gray-600 hover:text-red-500 transition-colors w-full py-4 mt-2 text-center font-semibold">
                     🚪 Terminar Partida
                 </button>
             </div>
@@ -615,158 +594,128 @@
     </div>
 
     <script>
-        const { createApp, ref, computed, onMounted, onUnmounted } = Vue;
+        const { createApp, ref, computed } = Vue;
 
         // ============================================================
-        // 🎮 CHALLENGES / DESAFÍOS (30+)
+        // 🔥🔥🔥 DESAFÍOS BESTIAS - SIN CENSURA 🔥🔥🔥
         // ============================================================
         const challenges = [
-            // YO NUNCA (7)
-            { category: "Yo Nunca", text: "Yo nunca... he besado a alguien en esta sala 💋" },
-            { category: "Yo Nunca", text: "Yo nunca... me he quedado dormido/a en un bar 😴" },
-            { category: "Yo Nunca", text: "Yo nunca... he enviado un mensaje borracho/a del que me arrepiento 📱" },
-            { category: "Yo Nunca", text: "Yo nunca... he fingido estar sobrio/a delante de mis padres 🤫" },
-            { category: "Yo Nunca", text: "Yo nunca... he vomitado en un taxi o Uber 🚕" },
-            { category: "Yo Nunca", text: "Yo nunca... he llorado por amor 💔" },
-            { category: "Yo Nunca", text: "Yo nunca... he stalkeado a un ex en redes sociales 👀" },
+            // YO NUNCA - Lo peor que has hecho
+            { category: "Yo Nunca", text: "Yo nunca... me he follado a alguien que no me atraía solo por despecho 💔" },
+            { category: "Yo Nunca", text: "Yo nunca... he fingido un orgasmo (si lo has hecho, 3 tragos y di con quién) 🎭" },
+            { category: "Yo Nunca", text: "Yo nunca... me he liado con el/la ex de un amigo/a 👀" },
+            { category: "Yo Nunca", text: "Yo nunca... he mandado nudes a la persona equivocada 📱💀" },
+            { category: "Yo Nunca", text: "Yo nunca... he vomitado encima de alguien mientras follaba 🤮" },
+            { category: "Yo Nunca", text: "Yo nunca... he tenido un trío (si sí, cuéntalo o 5 tragos) 🔥" },
+            { category: "Yo Nunca", text: "Yo nunca... me he masturbado pensando en alguien de esta sala 🙈" },
+            { category: "Yo Nunca", text: "Yo nunca... he follado en casa de mis padres mientras estaban 🤫" },
+            { category: "Yo Nunca", text: "Yo nunca... me he despertado sin saber con quién estaba en la cama 😵" },
+            { category: "Yo Nunca", text: "Yo nunca... he hecho un polvo de una noche y me he ido sin decir nada 🏃" },
 
-            // VERDAD (4)
-            { category: "Verdad", text: "¿Cuál es tu secreto más vergonzoso? Confiesa o bebe 3 tragos 🤐" },
-            { category: "Verdad", text: "¿Con quién de esta sala te irías de vacaciones? 🏖️" },
-            { category: "Verdad", text: "¿Cuál fue tu peor cita? Cuenta o bebe 2 tragos 💀" },
-            { category: "Verdad", text: "¿Qué es lo más ilegal que has hecho? 🚨" },
+            // VERDAD - Confesiones brutales
+            { category: "Verdad", text: "¿Cuál es tu fantasía sexual más turbia? Confiesa o bebe 5 tragos 🔞" },
+            { category: "Verdad", text: "¿Con quién de esta sala follarías si no hubiera consecuencias? DI EL NOMBRE 😈" },
+            { category: "Verdad", text: "¿Cuántas personas de aquí te has imaginado desnudas? Di el número 👀" },
+            { category: "Verdad", text: "Lee el último mensaje sexual que enviaste o recibiste 📱🔥" },
+            { category: "Verdad", text: "¿Cuál fue tu peor polvo y por qué? Detalles o 4 tragos 💀" },
+            { category: "Verdad", text: "¿Has llorado después de follar? ¿Por qué? 😢" },
+            { category: "Verdad", text: "¿Qué es lo más ilegal que has hecho? Cuenta la historia completa 🚨" },
+            { category: "Verdad", text: "¿Dónde es el sitio más raro donde has follado? 📍" },
+            { category: "Verdad", text: "Confiesa tu fetiche más raro. Sin mentir. 🎭" },
+            { category: "Verdad", text: "¿Alguna vez has tenido sentimientos por alguien aquí? ¿Quién? 💘" },
 
-            // RETO (6)
-            { category: "Reto", text: "Imita a otro jugador hasta que alguien adivine quién es 🎭" },
-            { category: "Reto", text: "Mantén contacto visual con alguien durante 30 segundos sin reírte 👁️" },
-            { category: "Reto", text: "Deja que alguien publique lo que quiera en tu Instagram 📱" },
-            { category: "Reto", text: "Haz tu mejor intento de baile sexy 💃" },
-            { category: "Reto", text: "Llama a tu ex y dile que le echas de menos (o bebe 5 tragos) 📞" },
-            { category: "Reto", text: "Deja que el grupo elija tu foto de perfil por 24h 📸" },
+            // RETO - Los más bestias
+            { category: "Reto", text: "Manda un audio a tu crush diciendo 'Estoy pensando en ti' con voz sexy 📲🔥" },
+            { category: "Reto", text: "Quítate una prenda de ropa. Si solo te queda ropa interior, bebe 5 tragos 👙" },
+            { category: "Reto", text: "Dale un beso de 10 segundos a quien elija el grupo 💋" },
+            { category: "Reto", text: "Siéntate en el regazo de otro jugador hasta el siguiente turno 🦵" },
+            { category: "Reto", text: "Deja que alguien te haga un chupetón donde quiera (o 6 tragos) 💜" },
+            { category: "Reto", text: "Gime de forma convincente durante 15 segundos mirando a alguien 😩" },
+            { category: "Reto", text: "Llama a tu ex y dile que le echas de menos EN ALTAVOZ 📞💀" },
+            { category: "Reto", text: "Haz tu mejor cara de orgasmo. El grupo vota si es creíble 🎭" },
+            { category: "Reto", text: "Lame el cuello a la persona de tu derecha (o CHUPA del vaso de todos) 👅" },
+            { category: "Reto", text: "Manda un mensaje a tu último match diciendo 'Tengo ganas de verte' 📱" },
+            { category: "Reto", text: "Baila en el regazo de otra persona durante 30 segundos 💃" },
+            { category: "Reto", text: "Deja que el grupo elija tu estado de WhatsApp por 24h 📱" },
 
-            // CASCADA (3)
-            { category: "Cascada", text: "¡CASCADA! Todos beben en orden. Solo puedes parar cuando pare el de tu izquierda 🌊" },
-            { category: "Cascada", text: "¡MINI CASCADA! Todos beben mientras cuentas hasta 5 🔢" },
-            { category: "Cascada", text: "¡CASCADA INVERSA! Empieza por el de la derecha 🔄" },
+            // CASTIGO - Todos beben
+            { category: "Castigo", text: "¡FONDO FONDO FONDO! El que no termine su bebida hace un reto extra 🍺⚡" },
+            { category: "Castigo", text: "Todos los que hayan follado este mes, beben. Los que no, beben el doble 🔥" },
+            { category: "Castigo", text: "Todos beben mientras el jugador actual cuenta hasta 10 muy lento 🐢" },
+            { category: "Castigo", text: "El último en tocar el suelo vacía su vaso 👇⚡" },
+            { category: "Castigo", text: "El que tenga el móvil más cerca lo pierde 5 minutos. Si mira, vacía vaso 📵" },
 
-            // REGLA NUEVA (4)
-            { category: "Regla Nueva", text: "Nueva regla: Nadie puede decir 'yo' hasta el próximo turno. El que lo diga, bebe 🙊" },
-            { category: "Regla Nueva", text: "Nueva regla: Antes de beber hay que hacer un brindis. El que no lo haga, bebe doble 🥂" },
-            { category: "Regla Nueva", text: "Nueva regla: Solo se puede beber con la mano izquierda 🖐️" },
-            { category: "Regla Nueva", text: "Nueva regla: Hay que hablar en tercera persona. El que falle, bebe 👤" },
+            // BOMBA - Lo más heavy
+            { category: "Bomba", text: "BOMBA: Rankea a todos los jugadores del más al menos atractivo. EN VOZ ALTA 💣" },
+            { category: "Bomba", text: "BOMBA: Di algo que nunca le dirías a alguien aquí... Y DÍSELO AHORA 💣" },
+            { category: "Bomba", text: "BOMBA: Confiesa quién te gustaría que te besara ahora mismo 💣💋" },
+            { category: "Bomba", text: "BOMBA: Cuenta tu secreto más vergonzoso o vacía tu vaso de golpe 💣" },
+            { category: "Bomba", text: "BOMBA: ¿De quién aquí tienes más celos? Di el nombre y por qué 💣" },
+            { category: "Bomba", text: "BOMBA: Describe cómo crees que folla cada persona del grupo 💣🔥" },
 
-            // TOMA X (6)
-            { category: "Toma", text: "Todos los que tengan pareja, ¡bebed! 💑" },
-            { category: "Toma", text: "Quien haya llegado tarde hoy, bebe 2 tragos ⏰" },
-            { category: "Toma", text: "El más joven de la sala bebe 🍼" },
-            { category: "Toma", text: "Quien tenga el pelo más largo, bebe 💇" },
-            { category: "Toma", text: "Todos los que lleven algo negro, ¡bebed! 🖤" },
-            { category: "Toma", text: "El último que miró el móvil, bebe 📲" },
+            // REGLA NUEVA - Jode a todos
+            { category: "Nueva Regla", text: "NUEVA REGLA: Nadie puede decir 'no' hasta el siguiente turno. El que lo diga, bebe 🚫" },
+            { category: "Nueva Regla", text: "NUEVA REGLA: Cada vez que alguien beba, tiene que gemir 😩🍺" },
+            { category: "Nueva Regla", text: "NUEVA REGLA: Hay que llamarse por motes sexuales. Inventadlos AHORA 💋" },
+            { category: "Nueva Regla", text: "NUEVA REGLA: Solo se puede hablar susurrando al oído 👂" },
+            { category: "Nueva Regla", text: "NUEVA REGLA: Antes de beber hay que decir algo que te ponga 🔥" },
 
-            // ELIGE (4)
-            { category: "Elige", text: "Elige a alguien para que se tome 3 tragos 🎯" },
-            { category: "Elige", text: "Elige a alguien para intercambiar bebidas 🔄" },
-            { category: "Elige", text: "Elige a 2 personas: deben mantener los meñiques entrelazados hasta el próximo turno 🤙" },
-            { category: "Elige", text: "Elige a alguien para un duelo de piedra, papel o tijera. El perdedor bebe ✂️" },
+            // ELIGE - El poder absoluto
+            { category: "Elige", text: "Elige a alguien para que se quite una prenda o beba 4 tragos 👆" },
+            { category: "Elige", text: "Elige a 2 personas: tienen que besarse o ambos beben 5 tragos 💋" },
+            { category: "Elige", text: "Elige a alguien para hacerle 3 preguntas. TIENE que responder con verdad 🔍" },
+            { category: "Elige", text: "Elige quién tiene que enviar un mensaje comprometedor a su ex 📱💀" },
+            { category: "Elige", text: "Elige a alguien para intercambiar una prenda de ropa contigo 👕" },
+            { category: "Elige", text: "Elige a alguien: tiene que hacer un striptease de 30 segundos o vaciar su vaso 🩲" },
 
-            // GRUPAL (4)
-            { category: "Grupal", text: "¡Todos beben! 🍺🍺🍺" },
-            { category: "Grupal", text: "El último en tocar el suelo, bebe 👇" },
-            { category: "Grupal", text: "El primero en nombrar 5 capitales de Europa se salva, los demás beben 🌍" },
-            { category: "Grupal", text: "Quien tenga el cumpleaños más cercano, reparte 3 tragos como quiera 🎂" }
+            // CONFESIONARIO - Lo más oscuro
+            { category: "Confesionario", text: "Confiesa: ¿Has fantaseado con alguien del grupo? ¿Qué fantasía? 🔞" },
+            { category: "Confesionario", text: "Confiesa: ¿Cuál es la mentira más gorda que le has dicho a alguien aquí? 🤥" },
+            { category: "Confesionario", text: "Confiesa: ¿Qué es lo más sucio que has hecho estando borracho/a? 🥴" },
+            { category: "Confesionario", text: "Confiesa: ¿Alguna vez te has enamorado de alguien que no debías? ¿Quién? 💔" },
+            { category: "Confesionario", text: "Confiesa: ¿Qué es lo que más te avergüenza de tu vida sexual? 🙈" },
+
+            // DUELO - Cara a cara
+            { category: "Duelo", text: "DUELO: Elige a alguien. Miraos a los ojos 30 seg. El primero en reír bebe el doble 👁️" },
+            { category: "Duelo", text: "DUELO: Piedra, papel, tijera. El perdedor hace lo que diga el ganador 🎲" },
+            { category: "Duelo", text: "DUELO: Compite con alguien a ver quién dice el piropo más sucio 💋" },
+            { category: "Duelo", text: "DUELO: Ver quién aguanta más tiempo haciendo una plancha. El perdedor, 5 tragos 💪" },
+
+            // HUMILLACIÓN - Sin piedad
+            { category: "Humillación", text: "El grupo vota: ¿Quién aquí es el/la más fácil? Esa persona bebe 3 😈" },
+            { category: "Humillación", text: "Imita cómo crees que gime la persona de tu izquierda 🎭" },
+            { category: "Humillación", text: "El grupo decide tu pose para una foto que subirás a Instagram 📸" },
+            { category: "Humillación", text: "Cuenta tu rechazo más humillante. Con detalles 💀" },
+            { category: "Humillación", text: "Deja que alguien mande un mensaje desde tu móvil a quien quiera 📱⚠️" }
         ];
-
-        // ============================================================
-        // 🔥 FIREBASE CONFIGURATION
-        // ============================================================
-        // Cambia PLACEHOLDER por tus credenciales de Firebase
-        // ============================================================
-        const FIREBASE_CONFIG = {
-            apiKey: "PLACEHOLDER_API_KEY",
-            authDomain: "PLACEHOLDER_AUTH_DOMAIN",
-            databaseURL: "PLACEHOLDER_DATABASE_URL",
-            projectId: "PLACEHOLDER_PROJECT_ID",
-            storageBucket: "PLACEHOLDER_STORAGE_BUCKET",
-            messagingSenderId: "PLACEHOLDER_MESSAGING_SENDER_ID",
-            appId: "PLACEHOLDER_APP_ID"
-        };
-        // ============================================================
-
-        // Check if Firebase is configured
-        const isFirebaseConfigured = !FIREBASE_CONFIG.apiKey.includes('PLACEHOLDER');
-
-        // Firebase will be loaded dynamically if configured
-        let firebaseApp = null;
-        let firebaseDatabase = null;
-        let firebaseFunctions = null;
 
         const app = createApp({
             setup() {
                 // State
                 const screen = ref('start');
-                const firebaseReady = ref(false);
-                const isOnlineMode = ref(false);
-
-                // Player info
-                const playerName = ref('');
+                const players = ref([]);
                 const newPlayerName = ref('');
-                const localPlayers = ref([]);
-
-                // Room info
-                const roomCode = ref('');
-                const roomCodeInput = ref('');
-                const playerId = ref('');
-                const hostId = ref('');
-                const players = ref({});
-
-                // Game state
                 const currentTurn = ref(0);
                 const currentChallenge = ref('');
                 const currentPlayerName = ref('');
                 const currentChallengeData = ref(null);
                 const currentPlayerIndex = ref(0);
 
-                // UI state
-                const errorMessage = ref('');
-                const copied = ref(false);
-
-                // Computed
-                const isHost = computed(() => playerId.value === hostId.value);
-                const gamePlayerNames = computed(() => {
-                    if (isOnlineMode.value) {
-                        return Object.values(players.value).map(p => p.name);
-                    }
-                    return localPlayers.value;
-                });
-
-                // ==================== LOCAL GAME METHODS ====================
-
-                const startLocalGame = () => {
-                    isOnlineMode.value = false;
+                // Methods
+                const startGame = () => {
                     screen.value = 'addPlayers';
                 };
 
-                const addLocalPlayer = () => {
+                const addPlayer = () => {
                     const name = newPlayerName.value.trim();
-                    if (name && !localPlayers.value.includes(name)) {
-                        localPlayers.value.push(name);
+                    if (name && !players.value.includes(name)) {
+                        players.value.push(name);
                         newPlayerName.value = '';
                     }
                 };
 
-                const removeLocalPlayer = (index) => {
-                    localPlayers.value.splice(index, 1);
-                };
-
-                const startLocalGameWithPlayers = () => {
-                    if (localPlayers.value.length < 2) return;
-
-                    // Pick random first player and challenge
-                    currentPlayerIndex.value = Math.floor(Math.random() * localPlayers.value.length);
-                    currentPlayerName.value = localPlayers.value[currentPlayerIndex.value];
-                    pickRandomChallenge();
-                    currentTurn.value = 0;
-                    screen.value = 'game';
+                const removePlayer = (index) => {
+                    players.value.splice(index, 1);
                 };
 
                 const pickRandomChallenge = () => {
@@ -775,358 +724,75 @@
                     currentChallengeData.value = challenge;
                 };
 
+                const startGameWithPlayers = () => {
+                    if (players.value.length < 2) return;
+
+                    currentPlayerIndex.value = Math.floor(Math.random() * players.value.length);
+                    currentPlayerName.value = players.value[currentPlayerIndex.value];
+                    pickRandomChallenge();
+                    currentTurn.value = 0;
+                    screen.value = 'game';
+                };
+
                 const nextTurn = () => {
-                    if (isOnlineMode.value) {
-                        nextTurnOnline();
-                    } else {
-                        // Local mode: rotate player
-                        currentPlayerIndex.value = (currentPlayerIndex.value + 1) % localPlayers.value.length;
-                        currentPlayerName.value = localPlayers.value[currentPlayerIndex.value];
-                        pickRandomChallenge();
-                        currentTurn.value++;
-                    }
+                    currentPlayerIndex.value = (currentPlayerIndex.value + 1) % players.value.length;
+                    currentPlayerName.value = players.value[currentPlayerIndex.value];
+                    pickRandomChallenge();
+                    currentTurn.value++;
                 };
 
                 const endGame = () => {
-                    if (isOnlineMode.value) {
-                        leaveRoom();
-                    } else {
-                        localPlayers.value = [];
-                        currentTurn.value = 0;
-                        screen.value = 'start';
-                    }
-                };
-
-                // ==================== ONLINE GAME METHODS ====================
-
-                const generateRoomCode = () => {
-                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                    let code = '';
-                    for (let i = 0; i < 4; i++) {
-                        code += chars.charAt(Math.floor(Math.random() * chars.length));
-                    }
-                    return code;
-                };
-
-                const generatePlayerId = () => {
-                    return 'player_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-                };
-
-                const createRoom = () => {
-                    if (!firebaseReady.value) {
-                        errorMessage.value = 'Firebase no está configurado';
-                        return;
-                    }
-                    isOnlineMode.value = true;
-                    screen.value = 'name';
-                };
-
-                const confirmCreateRoom = async () => {
-                    if (!playerName.value.trim() || !firebaseReady.value) return;
-
-                    roomCode.value = generateRoomCode();
-                    playerId.value = generatePlayerId();
-                    hostId.value = playerId.value;
-
-                    try {
-                        const { ref: dbRef, set, onDisconnect } = firebaseFunctions;
-
-                        // Create room
-                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
-                        await set(roomRef, {
-                            host: playerId.value,
-                            status: 'waiting',
-                            currentTurn: 0,
-                            currentChallenge: '',
-                            currentPlayer: '',
-                            createdAt: Date.now()
-                        });
-
-                        // Add player
-                        const playerRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}/players/${playerId.value}`);
-                        await set(playerRef, {
-                            name: playerName.value.trim(),
-                            joinedAt: Date.now()
-                        });
-
-                        onDisconnect(playerRef).remove();
-                        subscribeToRoom();
-                        screen.value = 'lobby';
-                        errorMessage.value = '';
-                    } catch (error) {
-                        console.error('Error creating room:', error);
-                        errorMessage.value = 'Error al crear la sala: ' + error.message;
-                    }
-                };
-
-                const joinRoom = async () => {
-                    if (!playerName.value.trim() || roomCodeInput.value.length !== 4 || !firebaseReady.value) return;
-
-                    roomCode.value = roomCodeInput.value.toUpperCase();
-                    playerId.value = generatePlayerId();
-
-                    try {
-                        const { ref: dbRef, get, set, onDisconnect } = firebaseFunctions;
-
-                        // Check room exists
-                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
-                        const snapshot = await get(roomRef);
-
-                        if (!snapshot.exists()) {
-                            errorMessage.value = 'Sala no encontrada. Verifica el código.';
-                            return;
-                        }
-
-                        const roomData = snapshot.val();
-                        if (roomData.status === 'playing') {
-                            errorMessage.value = 'La partida ya ha comenzado.';
-                            return;
-                        }
-
-                        hostId.value = roomData.host;
-
-                        // Add player
-                        const playerRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}/players/${playerId.value}`);
-                        await set(playerRef, {
-                            name: playerName.value.trim(),
-                            joinedAt: Date.now()
-                        });
-
-                        onDisconnect(playerRef).remove();
-                        subscribeToRoom();
-                        screen.value = 'lobby';
-                        errorMessage.value = '';
-                    } catch (error) {
-                        console.error('Error joining room:', error);
-                        errorMessage.value = 'Error al unirse: ' + error.message;
-                    }
-                };
-
-                let unsubscribeRoom = null;
-
-                const subscribeToRoom = () => {
-                    const { ref: dbRef, onValue } = firebaseFunctions;
-                    const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
-
-                    unsubscribeRoom = onValue(roomRef, (snapshot) => {
-                        if (!snapshot.exists()) {
-                            cleanup();
-                            screen.value = 'start';
-                            errorMessage.value = 'La sala ha sido cerrada.';
-                            return;
-                        }
-
-                        const data = snapshot.val();
-                        hostId.value = data.host;
-                        players.value = data.players || {};
-
-                        if (data.status === 'playing') {
-                            screen.value = 'game';
-                            currentTurn.value = data.currentTurn || 0;
-                            currentChallenge.value = data.currentChallenge || '';
-
-                            // Get current player name
-                            const currentPlayerId = data.currentPlayer;
-                            if (currentPlayerId && data.players && data.players[currentPlayerId]) {
-                                currentPlayerName.value = data.players[currentPlayerId].name;
-                            }
-
-                            // Find challenge data
-                            const found = challenges.find(c => c.text === data.currentChallenge);
-                            currentChallengeData.value = found || null;
-                        }
-                    });
-                };
-
-                const startOnlineGame = async () => {
-                    if (!isHost.value || !firebaseReady.value) return;
-
-                    const playerIds = Object.keys(players.value);
-                    if (playerIds.length < 2) return;
-
-                    const firstPlayer = playerIds[Math.floor(Math.random() * playerIds.length)];
-                    const firstChallenge = challenges[Math.floor(Math.random() * challenges.length)];
-
-                    try {
-                        const { ref: dbRef, update } = firebaseFunctions;
-                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
-                        await update(roomRef, {
-                            status: 'playing',
-                            currentTurn: 0,
-                            currentPlayer: firstPlayer,
-                            currentChallenge: firstChallenge.text
-                        });
-                    } catch (error) {
-                        console.error('Error starting game:', error);
-                    }
-                };
-
-                const nextTurnOnline = async () => {
-                    if (!firebaseReady.value) return;
-
-                    const playerIds = Object.keys(players.value);
-                    if (playerIds.length === 0) return;
-
-                    const nextPlayer = playerIds[Math.floor(Math.random() * playerIds.length)];
-                    const nextChallenge = challenges[Math.floor(Math.random() * challenges.length)];
-
-                    try {
-                        const { ref: dbRef, update } = firebaseFunctions;
-                        const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
-                        await update(roomRef, {
-                            currentTurn: currentTurn.value + 1,
-                            currentPlayer: nextPlayer,
-                            currentChallenge: nextChallenge.text
-                        });
-                    } catch (error) {
-                        console.error('Error next turn:', error);
-                    }
-                };
-
-                const leaveRoom = async () => {
-                    if (firebaseReady.value && roomCode.value) {
-                        try {
-                            const { ref: dbRef, remove, get } = firebaseFunctions;
-                            const playerRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}/players/${playerId.value}`);
-                            await remove(playerRef);
-
-                            // If host, delete room
-                            if (isHost.value) {
-                                const roomRef = dbRef(firebaseDatabase, `rooms/${roomCode.value}`);
-                                await remove(roomRef);
-                            }
-                        } catch (error) {
-                            console.error('Error leaving:', error);
-                        }
-                    }
-                    cleanup();
-                    screen.value = 'start';
-                };
-
-                const cleanup = () => {
-                    if (unsubscribeRoom) {
-                        unsubscribeRoom();
-                        unsubscribeRoom = null;
-                    }
-                    players.value = {};
-                    roomCode.value = '';
-                    roomCodeInput.value = '';
+                    players.value = [];
                     currentTurn.value = 0;
-                    currentChallenge.value = '';
-                    currentPlayerName.value = '';
-                };
-
-                // ==================== UTILITY METHODS ====================
-
-                const copyRoomCode = async () => {
-                    try {
-                        await navigator.clipboard.writeText(roomCode.value);
-                        copied.value = true;
-                        setTimeout(() => copied.value = false, 2000);
-                    } catch (error) {
-                        // Fallback for older browsers
-                        const textArea = document.createElement('textarea');
-                        textArea.value = roomCode.value;
-                        document.body.appendChild(textArea);
-                        textArea.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(textArea);
-                        copied.value = true;
-                        setTimeout(() => copied.value = false, 2000);
-                    }
+                    screen.value = 'start';
                 };
 
                 const getCategoryColor = (category) => {
                     const colors = {
-                        'Yo Nunca': 'linear-gradient(135deg, #ff2d75, #ff6b9d)',
-                        'Verdad': 'linear-gradient(135deg, #00f5ff, #00c4cc)',
-                        'Reto': 'linear-gradient(135deg, #7c3aed, #a855f7)',
-                        'Cascada': 'linear-gradient(135deg, #3b82f6, #60a5fa)',
-                        'Regla Nueva': 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-                        'Toma': 'linear-gradient(135deg, #10b981, #34d399)',
-                        'Elige': 'linear-gradient(135deg, #ec4899, #f472b6)',
-                        'Grupal': 'linear-gradient(135deg, #8b5cf6, #a78bfa)'
+                        'Yo Nunca': 'linear-gradient(135deg, #dc2626, #991b1b)',
+                        'Verdad': 'linear-gradient(135deg, #9333ea, #6b21a8)',
+                        'Reto': 'linear-gradient(135deg, #ea580c, #c2410c)',
+                        'Castigo': 'linear-gradient(135deg, #0891b2, #0e7490)',
+                        'Bomba': 'linear-gradient(135deg, #000000, #1f1f1f)',
+                        'Nueva Regla': 'linear-gradient(135deg, #ca8a04, #a16207)',
+                        'Elige': 'linear-gradient(135deg, #db2777, #be185d)',
+                        'Confesionario': 'linear-gradient(135deg, #4f46e5, #3730a3)',
+                        'Duelo': 'linear-gradient(135deg, #059669, #047857)',
+                        'Humillación': 'linear-gradient(135deg, #dc2626, #450a0a)'
                     };
-                    return colors[category] || 'linear-gradient(135deg, #6b7280, #9ca3af)';
+                    return colors[category] || 'linear-gradient(135deg, #6b7280, #4b5563)';
                 };
 
                 const getCategoryEmoji = (category) => {
                     const emojis = {
                         'Yo Nunca': '🙅',
-                        'Verdad': '🤔',
-                        'Reto': '🎭',
-                        'Cascada': '🌊',
-                        'Regla Nueva': '📜',
-                        'Toma': '🍺',
+                        'Verdad': '🔮',
+                        'Reto': '🎯',
+                        'Castigo': '⚡',
+                        'Bomba': '💣',
+                        'Nueva Regla': '📜',
                         'Elige': '👆',
-                        'Grupal': '👥'
+                        'Confesionario': '🕯️',
+                        'Duelo': '⚔️',
+                        'Humillación': '😈'
                     };
-                    return emojis[category] || '🎲';
+                    return emojis[category] || '🔥';
                 };
 
-                // ==================== FIREBASE INITIALIZATION ====================
-
-                onMounted(async () => {
-                    if (isFirebaseConfigured) {
-                        try {
-                            const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-                            const dbModule = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-
-                            firebaseApp = initializeApp(FIREBASE_CONFIG);
-                            firebaseDatabase = dbModule.getDatabase(firebaseApp);
-                            firebaseFunctions = dbModule;
-                            firebaseReady.value = true;
-                            console.log('✅ Firebase initialized successfully');
-                        } catch (error) {
-                            console.error('❌ Firebase initialization failed:', error);
-                            firebaseReady.value = false;
-                        }
-                    } else {
-                        console.log('ℹ️ Firebase not configured. Running in local mode only.');
-                    }
-                });
-
-                onUnmounted(() => {
-                    cleanup();
-                });
-
                 return {
-                    // State
                     screen,
-                    firebaseReady,
-                    isOnlineMode,
-                    playerName,
-                    newPlayerName,
-                    localPlayers,
-                    roomCode,
-                    roomCodeInput,
-                    playerId,
-                    hostId,
                     players,
+                    newPlayerName,
                     currentTurn,
                     currentChallenge,
                     currentPlayerName,
                     currentChallengeData,
-                    errorMessage,
-                    copied,
-
-                    // Computed
-                    isHost,
-                    gamePlayerNames,
-
-                    // Methods
-                    startLocalGame,
-                    addLocalPlayer,
-                    removeLocalPlayer,
-                    startLocalGameWithPlayers,
+                    startGame,
+                    addPlayer,
+                    removePlayer,
+                    startGameWithPlayers,
                     nextTurn,
                     endGame,
-                    createRoom,
-                    confirmCreateRoom,
-                    joinRoom,
-                    startOnlineGame,
-                    leaveRoom,
-                    copyRoomCode,
                     getCategoryColor,
                     getCategoryEmoji
                 };
