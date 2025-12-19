@@ -19,295 +19,447 @@
             padding: 0;
         }
 
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
         body {
             background: #0a0a0a;
             min-height: 100vh;
+            min-height: 100dvh;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             overflow-x: hidden;
             color: white;
         }
 
-        /* Animated blood drip background */
+        /* Background with subtle red glow */
         .bg-hellfire {
             background:
-                radial-gradient(ellipse at top, #1a0000 0%, #0a0a0a 50%),
-                radial-gradient(ellipse at bottom, #0a0a0a 0%, #000000 100%);
-            background-size: 100% 100%;
+                radial-gradient(ellipse at 50% 0%, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+                #0a0a0a;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        /* Main container */
+        .main-container {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             position: relative;
+            z-index: 10;
         }
 
-        .bg-hellfire::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                repeating-linear-gradient(90deg,
-                    transparent 0px,
-                    transparent 100px,
-                    rgba(255, 0, 0, 0.03) 100px,
-                    rgba(255, 0, 0, 0.03) 101px);
-            pointer-events: none;
-            z-index: 0;
+        /* Content wrapper - controls max width */
+        .content-wrapper {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        /* Fire glow effects */
-        .glow-fire {
-            box-shadow:
-                0 0 20px rgba(255, 0, 0, 0.6),
-                0 0 40px rgba(255, 0, 0, 0.4),
-                0 0 60px rgba(255, 0, 0, 0.2),
-                inset 0 0 20px rgba(255, 0, 0, 0.1);
+        /* Header/Title section */
+        .header-section {
+            text-align: center;
+            padding: 10px 0;
         }
 
-        .glow-fire-intense {
-            box-shadow:
-                0 0 30px rgba(255, 0, 0, 0.8),
-                0 0 60px rgba(255, 0, 0, 0.5),
-                0 0 90px rgba(255, 0, 0, 0.3);
-        }
-
-        /* Glowing text */
-        .text-fire {
-            background: linear-gradient(135deg, #ff0000 0%, #ff4444 50%, #ff0000 100%);
+        .title-brutal {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 12vw, 5rem);
+            letter-spacing: 6px;
+            line-height: 1;
+            background: linear-gradient(180deg, #ff3333 0%, #cc0000 50%, #990000 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.8));
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+            animation: pulse-glow 3s ease-in-out infinite;
         }
 
-        .text-glow {
-            text-shadow:
-                0 0 10px rgba(255, 0, 0, 0.9),
-                0 0 20px rgba(255, 0, 0, 0.7),
-                0 0 40px rgba(255, 0, 0, 0.5),
-                0 0 80px rgba(255, 0, 0, 0.3);
-        }
-
-        /* Main title */
-        .title-brutal {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 5rem;
-            letter-spacing: 8px;
-            animation: pulse-fire 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-fire {
+        @keyframes pulse-glow {
 
             0%,
             100% {
-                filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.8));
-                transform: scale(1);
+                filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
             }
 
             50% {
-                filter: drop-shadow(0 0 40px rgba(255, 0, 0, 1));
-                transform: scale(1.02);
+                filter: drop-shadow(0 0 35px rgba(255, 0, 0, 0.8));
             }
         }
 
-        /* Buttons */
-        .btn-brutal {
-            position: relative;
-            padding: 20px 40px;
-            border-radius: 12px;
-            font-weight: 900;
-            font-size: 1.2rem;
+        .subtitle {
+            color: #666;
+            font-size: clamp(0.85rem, 3vw, 1rem);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            border: 2px solid;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
+            letter-spacing: 4px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(145deg, #151515 0%, #0d0d0d 100%);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: clamp(20px, 5vw, 28px);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+            border-radius: 2px;
+        }
+
+        /* Warning banner */
+        .warning-banner {
+            background: repeating-linear-gradient(-45deg,
+                    #1a0000,
+                    #1a0000 8px,
+                    #0d0d0d 8px,
+                    #0d0d0d 16px);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .warning-text {
+            color: #ff4444;
+            font-weight: 700;
+            font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+            letter-spacing: 1px;
+        }
+
+        /* Buttons */
+        .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-        }
-
-        .btn-brutal::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-brutal:hover::before {
-            left: 100%;
-        }
-
-        .btn-fire {
-            background: linear-gradient(135deg, #cc0000 0%, #ff0000 50%, #cc0000 100%);
-            border-color: #ff0000;
-            color: white;
-        }
-
-        .btn-fire:hover,
-        .btn-fire:active {
-            transform: scale(1.05) translateY(-2px);
-            box-shadow:
-                0 10px 30px rgba(255, 0, 0, 0.6),
-                0 0 60px rgba(255, 0, 0, 0.4);
-        }
-
-        .btn-dark {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
-            border-color: #ff0000;
-            color: #ff0000;
-        }
-
-        .btn-dark:hover,
-        .btn-dark:active {
-            background: linear-gradient(135deg, #2a0000 0%, #3a0000 50%, #2a0000 100%);
-            transform: scale(1.03);
-        }
-
-        .btn-brutal:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* Cards */
-        .card-brutal {
-            background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
-            border: 2px solid rgba(255, 0, 0, 0.3);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
+            padding: clamp(16px, 4vw, 20px) 24px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: clamp(1rem, 4vw, 1.15rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .card-brutal::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+        .btn-primary {
+            background: linear-gradient(135deg, #cc0000 0%, #ff0000 50%, #cc0000 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #888;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            color: #ff4444;
+            border-color: rgba(255, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-small {
+            padding: 14px 20px;
+            min-width: 56px;
+            font-size: 1.2rem;
         }
 
         /* Input */
-        .input-brutal {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid rgba(255, 0, 0, 0.4);
-            border-radius: 12px;
-            padding: 18px;
-            color: white;
-            font-size: 1.1rem;
+        .input {
             width: 100%;
-            transition: all 0.3s ease;
-            font-weight: 600;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: clamp(14px, 3.5vw, 18px);
+            color: white;
+            font-size: clamp(0.95rem, 3vw, 1.05rem);
+            font-weight: 500;
+            transition: all 0.25s ease;
         }
 
-        .input-brutal:focus {
+        .input:focus {
             outline: none;
             border-color: #ff0000;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.15);
         }
 
-        .input-brutal::placeholder {
+        .input::placeholder {
             color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Player items */
+        /* Input group */
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .input-group .input {
+            flex: 1;
+        }
+
+        /* Player list */
+        .player-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .player-item {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.2);
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 14px;
-            transition: all 0.3s ease;
+            background: rgba(255, 0, 0, 0.08);
+            border: 1px solid rgba(255, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.2s ease;
         }
 
         .player-item:hover {
-            background: rgba(255, 0, 0, 0.2);
-            border-color: rgba(255, 0, 0, 0.5);
-        }
-
-        .player-item.active {
-            background: rgba(255, 0, 0, 0.3);
-            border-color: #ff0000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            background: rgba(255, 0, 0, 0.12);
+            border-color: rgba(255, 0, 0, 0.3);
         }
 
         .player-avatar {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #ff0000, #990000);
+            background: linear-gradient(135deg, #cc0000, #660000);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            font-weight: bold;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: white;
-            border: 2px solid #ff0000;
+            flex-shrink: 0;
+        }
+
+        .player-name {
+            flex: 1;
+            font-weight: 600;
+            font-size: clamp(0.95rem, 3vw, 1rem);
+        }
+
+        .player-remove {
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .player-remove:hover {
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #555;
+        }
+
+        .empty-state .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Section titles */
+        .section-title {
+            font-size: clamp(1.5rem, 5vw, 1.8rem);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ff3333, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            color: #666;
+            text-align: center;
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            margin-bottom: 20px;
+        }
+
+        /* Game screen */
+        .turn-badge {
+            display: inline-block;
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ff4444;
+            letter-spacing: 1px;
+        }
+
+        .current-player {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .current-player-label {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .current-player-name {
+            font-size: clamp(1.8rem, 7vw, 2.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff3333, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.4));
         }
 
         /* Challenge card */
         .challenge-card {
-            animation: slide-brutal 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(145deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 2px solid rgba(255, 0, 0, 0.25);
+            border-radius: 20px;
+            padding: clamp(24px, 6vw, 32px);
+            text-align: center;
+            box-shadow:
+                0 0 30px rgba(255, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            animation: card-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes slide-brutal {
+        @keyframes card-enter {
             from {
                 opacity: 0;
-                transform: translateY(50px) scale(0.9) rotateX(10deg);
+                transform: translateY(30px) scale(0.95);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1) rotateX(0);
+                transform: translateY(0) scale(1);
             }
         }
 
-        /* Category badge */
         .category-badge {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 8px 18px;
             border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 800;
+            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
         }
 
-        /* Floating emojis */
+        .challenge-text {
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
+            line-height: 1.5;
+            font-weight: 600;
+            color: #eee;
+        }
+
+        /* Player pills in game */
+        .player-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .player-pill {
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .player-pill.active {
+            background: linear-gradient(135deg, #cc0000, #990000);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        }
+
+        .player-pill.inactive {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Floating decorations */
         .floating-skull {
             position: fixed;
-            font-size: 2rem;
-            opacity: 0.1;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            opacity: 0.08;
             pointer-events: none;
-            animation: float-skull 20s linear infinite;
-            z-index: 0;
+            animation: float-up 25s linear infinite;
+            z-index: 1;
         }
 
-        @keyframes float-skull {
+        @keyframes float-up {
             0% {
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
 
-            10% {
-                opacity: 0.1;
+            5% {
+                opacity: 0.08;
             }
 
-            90% {
-                opacity: 0.1;
+            95% {
+                opacity: 0.08;
             }
 
             100% {
@@ -316,285 +468,177 @@
             }
         }
 
-        /* Shake animation for intense moments */
-        .shake {
-            animation: shake 0.5s ease-in-out;
+        /* Helper text */
+        .helper-text {
+            color: #555;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            text-align: center;
+            margin-top: 16px;
         }
 
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20% {
-                transform: translateX(-10px) rotate(-1deg);
-            }
-
-            40% {
-                transform: translateX(10px) rotate(1deg);
-            }
-
-            60% {
-                transform: translateX(-10px) rotate(-1deg);
-            }
-
-            80% {
-                transform: translateX(10px) rotate(1deg);
-            }
+        /* Back button */
+        .back-btn {
+            color: #555;
+            background: none;
+            border: none;
+            padding: 16px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
         }
 
-        /* Player pills in game */
-        .player-pill {
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .player-pill.active {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            color: white;
-            border-color: #ff0000;
-            animation: pulse-active 1.5s ease-in-out infinite;
-        }
-
-        .player-pill.inactive {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.5);
-            border-color: rgba(255, 0, 0, 0.2);
-        }
-
-        @keyframes pulse-active {
-
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-            }
-
-            50% {
-                box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.4);
-            }
+        .back-btn:hover {
+            color: #ff4444;
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #ff0000;
-            border-radius: 3px;
+            background: rgba(255, 0, 0, 0.3);
+            border-radius: 2px;
         }
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            .title-brutal {
-                font-size: 3.5rem;
-                letter-spacing: 4px;
-            }
-
-            .card-brutal {
-                padding: 20px;
-            }
-
-            .btn-brutal {
-                padding: 16px 30px;
-                font-size: 1rem;
-            }
+        /* Spacing utilities */
+        .mt-2 {
+            margin-top: 8px;
         }
 
-        /* Warning banner */
-        .warning-banner {
-            background: repeating-linear-gradient(45deg,
-                    #000,
-                    #000 10px,
-                    #ff0000 10px,
-                    #ff0000 20px);
-            padding: 3px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        .mt-4 {
+            margin-top: 16px;
         }
 
-        .warning-banner-inner {
-            background: #0a0a0a;
-            border-radius: 8px;
-            padding: 10px 15px;
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+
+        .text-center {
             text-align: center;
-            font-weight: 700;
-            color: #ff0000;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-
-        /* Turn counter */
-        .turn-counter {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid rgba(255, 0, 0, 0.4);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #ff4444;
         }
     </style>
 </head>
 
-<body class="bg-hellfire min-h-screen">
-    <div id="app" class="min-h-screen">
-        <!-- Floating skulls background -->
-        <div class="floating-skull" style="left: 5%; animation-delay: 0s;">💀</div>
-        <div class="floating-skull" style="left: 20%; animation-delay: 4s;">🔥</div>
-        <div class="floating-skull" style="left: 35%; animation-delay: 8s;">☠️</div>
-        <div class="floating-skull" style="left: 50%; animation-delay: 12s;">🍺</div>
-        <div class="floating-skull" style="left: 65%; animation-delay: 16s;">💀</div>
-        <div class="floating-skull" style="left: 80%; animation-delay: 3s;">🔥</div>
-        <div class="floating-skull" style="left: 95%; animation-delay: 7s;">☠️</div>
+<body class="bg-hellfire">
+    <div id="app">
+        <!-- Floating decorations -->
+        <div class="floating-skull" style="left: 8%; animation-delay: 0s;">💀</div>
+        <div class="floating-skull" style="left: 25%; animation-delay: 5s;">🔥</div>
+        <div class="floating-skull" style="left: 50%; animation-delay: 10s;">☠️</div>
+        <div class="floating-skull" style="left: 75%; animation-delay: 15s;">🍺</div>
+        <div class="floating-skull" style="left: 92%; animation-delay: 20s;">💀</div>
 
-        <!-- Main Container -->
-        <div class="min-h-screen flex flex-col items-center justify-center p-5 relative z-10">
+        <div class="main-container">
+            <div class="content-wrapper">
 
-            <!-- ==================== START SCREEN ==================== -->
-            <div v-if="screen === 'start'" class="w-full max-w-md">
-                <div class="text-center mb-10">
-                    <h1 class="title-brutal text-fire">🔥 PREVIAS 🔥</h1>
-                    <p class="text-gray-500 text-lg mt-2 uppercase tracking-widest">El juego más bestia</p>
-                </div>
+                <!-- ==================== START SCREEN ==================== -->
+                <template v-if="screen === 'start'">
+                    <div class="header-section">
+                        <h1 class="title-brutal">🔥 PREVIAS 🔥</h1>
+                        <p class="subtitle">El juego más bestia</p>
+                    </div>
 
-                <div class="card-brutal">
-                    <div class="warning-banner">
-                        <div class="warning-banner-inner">
-                            ⚠️ SOLO PARA MAYORES DE 18 ⚠️
+                    <div class="card">
+                        <div class="warning-banner">
+                            <span class="warning-text">⚠️ SOLO PARA MAYORES DE 18 ⚠️</span>
                         </div>
-                    </div>
 
-                    <button @click="startGame" class="btn-brutal btn-fire w-full">
-                        🎮 JUGAR
-                    </button>
-
-                    <p class="text-center text-gray-600 text-sm mt-4">
-                        Añade jugadores y prepárate para lo peor
-                    </p>
-                </div>
-            </div>
-
-            <!-- ==================== ADD PLAYERS SCREEN ==================== -->
-            <div v-if="screen === 'addPlayers'" class="w-full max-w-md">
-                <div class="text-center mb-6">
-                    <h1 class="text-3xl font-black text-fire text-glow mb-2">👥 VÍCTIMAS</h1>
-                    <p class="text-gray-500">Mínimo 2 valientes para empezar</p>
-                </div>
-
-                <div class="card-brutal">
-                    <!-- Add player form -->
-                    <div class="flex gap-3 mb-6">
-                        <input v-model="newPlayerName" type="text" placeholder="Nombre del jugador..."
-                            class="input-brutal flex-1" maxlength="15" @keyup.enter="addPlayer">
-                        <button @click="addPlayer" class="btn-brutal btn-fire" :disabled="!newPlayerName.trim()"
-                            style="min-width: 60px; padding: 15px;">
-                            ➕
+                        <button @click="startGame" class="btn btn-primary">
+                            🎮 JUGAR
                         </button>
+
+                        <p class="helper-text">Añade jugadores y prepárate para lo peor</p>
+                    </div>
+                </template>
+
+                <!-- ==================== ADD PLAYERS SCREEN ==================== -->
+                <template v-if="screen === 'addPlayers'">
+                    <div>
+                        <h2 class="section-title">👥 VÍCTIMAS</h2>
+                        <p class="section-subtitle">Mínimo 2 valientes para empezar</p>
                     </div>
 
-                    <!-- Player list -->
-                    <div class="space-y-2 mb-6 max-h-60 overflow-y-auto">
-                        <div v-for="(player, index) in players" :key="index" class="player-item">
-                            <div class="player-avatar">
-                                {{ player.charAt(0).toUpperCase() }}
-                            </div>
-                            <span class="text-white font-semibold flex-1">{{ player }}</span>
-                            <button @click="removePlayer(index)"
-                                class="text-red-500 hover:text-red-400 text-xl px-2 font-bold">
-                                ✕
+                    <div class="card">
+                        <div class="input-group">
+                            <input v-model="newPlayerName" type="text" placeholder="Nombre del jugador..." class="input"
+                                maxlength="15" @keyup.enter="addPlayer">
+                            <button @click="addPlayer" class="btn btn-primary btn-small"
+                                :disabled="!newPlayerName.trim()">
+                                ➕
                             </button>
                         </div>
 
-                        <div v-if="players.length === 0" class="text-center text-gray-600 py-8">
-                            <p class="text-4xl mb-2">💀</p>
-                            <p>¿Nadie tiene huevos?</p>
+                        <div class="player-list">
+                            <div v-for="(player, index) in players" :key="index" class="player-item">
+                                <div class="player-avatar">{{ player.charAt(0).toUpperCase() }}</div>
+                                <span class="player-name">{{ player }}</span>
+                                <button @click="removePlayer(index)" class="player-remove">✕</button>
+                            </div>
+
+                            <div v-if="players.length === 0" class="empty-state">
+                                <span class="emoji">💀</span>
+                                <p>¿Nadie tiene huevos?</p>
+                            </div>
                         </div>
+
+                        <button @click="startGameWithPlayers" class="btn btn-primary" :disabled="players.length < 2">
+                            🔥 EMPEZAR ({{ players.length }} jugadores)
+                        </button>
                     </div>
 
-                    <!-- Start button -->
-                    <button @click="startGameWithPlayers" class="btn-brutal btn-fire w-full"
-                        :disabled="players.length < 2">
-                        🔥 EMPEZAR ({{ players.length }} jugadores)
-                    </button>
-                </div>
+                    <button @click="screen = 'start'" class="back-btn">← Volver</button>
+                </template>
 
-                <button @click="screen = 'start'"
-                    class="text-gray-600 hover:text-red-500 transition-colors w-full py-4 mt-2 text-center font-semibold">
-                    ← Volver
-                </button>
-            </div>
-
-            <!-- ==================== GAME SCREEN ==================== -->
-            <div v-if="screen === 'game'" class="w-full max-w-md">
-                <!-- Turn indicator -->
-                <div class="text-center mb-4">
-                    <span class="turn-counter">
-                        RONDA {{ currentTurn + 1 }}
-                    </span>
-                </div>
-
-                <!-- Current player -->
-                <div class="text-center mb-5">
-                    <p class="text-gray-500 mb-1 text-sm uppercase tracking-wider">Le toca a:</p>
-                    <p class="text-4xl font-black text-fire text-glow">
-                        {{ currentPlayerName }}
-                    </p>
-                </div>
-
-                <!-- Challenge card -->
-                <div class="card-brutal challenge-card mb-5 glow-fire" :key="currentTurn">
+                <!-- ==================== GAME SCREEN ==================== -->
+                <template v-if="screen === 'game'">
                     <div class="text-center">
-                        <!-- Category badge -->
-                        <span class="category-badge mb-4"
-                            :style="{ background: getCategoryColor(currentChallengeData?.category) }">
-                            {{ getCategoryEmoji(currentChallengeData?.category) }} {{ currentChallengeData?.category ||
-                            'Desafío' }}
-                        </span>
-
-                        <!-- Challenge text -->
-                        <p class="text-2xl text-white font-bold mt-6 leading-relaxed px-2">
-                            {{ currentChallenge }}
-                        </p>
+                        <span class="turn-badge">RONDA {{ currentTurn + 1 }}</span>
                     </div>
-                </div>
 
-                <!-- Player list (compact) -->
-                <div class="card-brutal mb-5 py-4">
-                    <div class="flex flex-wrap gap-2 justify-center">
-                        <div v-for="(name, index) in players" :key="index" class="player-pill"
-                            :class="name === currentPlayerName ? 'active' : 'inactive'">
-                            {{ name }}
+                    <div class="current-player">
+                        <p class="current-player-label">Le toca a</p>
+                        <p class="current-player-name">{{ currentPlayerName }}</p>
+                    </div>
+
+                    <div class="challenge-card" :key="currentTurn">
+                        <span class="category-badge"
+                            :style="{ background: getCategoryColor(currentChallengeData?.category) }">
+                            {{ getCategoryEmoji(currentChallengeData?.category) }}
+                            {{ currentChallengeData?.category || 'Desafío' }}
+                        </span>
+                        <p class="challenge-text">{{ currentChallenge }}</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="player-pills">
+                            <span v-for="(name, index) in players" :key="index" class="player-pill"
+                                :class="name === currentPlayerName ? 'active' : 'inactive'">
+                                {{ name }}
+                            </span>
                         </div>
                     </div>
-                </div>
 
-                <!-- Next turn button -->
-                <button @click="nextTurn" class="btn-brutal btn-fire w-full">
-                    ⏭️ SIGUIENTE TURNO
-                </button>
+                    <button @click="nextTurn" class="btn btn-primary">
+                        ⏭️ SIGUIENTE TURNO
+                    </button>
 
-                <button @click="endGame"
-                    class="text-gray-600 hover:text-red-500 transition-colors w-full py-4 mt-2 text-center font-semibold">
-                    🚪 Terminar Partida
-                </button>
+                    <button @click="endGame" class="back-btn">🚪 Terminar Partida</button>
+                </template>
+
             </div>
-
         </div>
     </div>
 
     <script>
-        const { createApp, ref, computed } = Vue;
+        const { createApp, ref } = Vue;
 
         // ============================================================
         // 🔥🔥🔥 DESAFÍOS BESTIAS - SIN CENSURA 🔥🔥🔥
@@ -691,7 +735,6 @@
 
         const app = createApp({
             setup() {
-                // State
                 const screen = ref('start');
                 const players = ref([]);
                 const newPlayerName = ref('');
@@ -701,7 +744,6 @@
                 const currentChallengeData = ref(null);
                 const currentPlayerIndex = ref(0);
 
-                // Methods
                 const startGame = () => {
                     screen.value = 'addPlayers';
                 };
@@ -726,7 +768,6 @@
 
                 const startGameWithPlayers = () => {
                     if (players.value.length < 2) return;
-
                     currentPlayerIndex.value = Math.floor(Math.random() * players.value.length);
                     currentPlayerName.value = players.value[currentPlayerIndex.value];
                     pickRandomChallenge();
@@ -753,7 +794,7 @@
                         'Verdad': 'linear-gradient(135deg, #9333ea, #6b21a8)',
                         'Reto': 'linear-gradient(135deg, #ea580c, #c2410c)',
                         'Castigo': 'linear-gradient(135deg, #0891b2, #0e7490)',
-                        'Bomba': 'linear-gradient(135deg, #000000, #1f1f1f)',
+                        'Bomba': 'linear-gradient(135deg, #18181b, #000000)',
                         'Nueva Regla': 'linear-gradient(135deg, #ca8a04, #a16207)',
                         'Elige': 'linear-gradient(135deg, #db2777, #be185d)',
                         'Confesionario': 'linear-gradient(135deg, #4f46e5, #3730a3)',
